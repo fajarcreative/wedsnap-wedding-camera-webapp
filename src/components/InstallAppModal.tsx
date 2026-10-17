@@ -2,16 +2,33 @@ import React, { useState } from 'react';
 import { useApp } from '../context/AppContext';
 
 export const InstallAppModal: React.FC = () => {
-  const { isInstallModalOpen, setIsInstallModalOpen, deferredPrompt, installPWA, isAppInstalled } =
+  const { isInstallModalOpen, setIsInstallModalOpen, deferredPrompt, installPWA, isAppInstalled, showToast } =
     useApp();
 
-  // Detect iOS
+  // Detect iOS & In-App Webviews (WhatsApp, Instagram, FB)
   const isIOS =
     typeof window !== 'undefined' &&
     (/iPad|iPhone|iPod/.test(navigator.userAgent) ||
       (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1));
 
+  const isWhatsApp =
+    typeof window !== 'undefined' &&
+    (/WhatsApp/i.test(navigator.userAgent) ||
+      /FB/i.test(navigator.userAgent) ||
+      /Instagram/i.test(navigator.userAgent) ||
+      /Line/i.test(navigator.userAgent));
+
   const [activeTab, setActiveTab] = useState<'ios' | 'android'>(isIOS ? 'ios' : 'android');
+  const [copiedLink, setCopiedLink] = useState(false);
+
+  const handleCopyLink = () => {
+    if (typeof navigator !== 'undefined' && navigator.clipboard) {
+      navigator.clipboard.writeText(window.location.href);
+      setCopiedLink(true);
+      showToast('content_copy', 'Tautan berhasil disalin! Silakan tempel di browser Chrome atau Safari.');
+      setTimeout(() => setCopiedLink(false), 2500);
+    }
+  };
 
   if (!isInstallModalOpen) return null;
 
@@ -46,12 +63,38 @@ export const InstallAppModal: React.FC = () => {
             Pasang WedSnap di HP Anda
           </h2>
           <p className="font-body-sm text-body-sm text-on-surface-variant mt-1 text-[13px] max-w-xs">
-            Buka kamera lebih cepat, mode layar penuh (full screen), dan hemat kuota selama pesta pernikahan!
+            Buka kamera lebih cepat, mode layar penuh (full screen), dan nikmati fitur aplikasi tanpa batasan!
           </p>
         </div>
 
         {/* Content */}
         <div className="p-5 flex-1 overflow-y-auto space-y-4">
+          {/* Important notice if opened inside WhatsApp Webview */}
+          {isWhatsApp && (
+            <div className="p-3.5 rounded-xl bg-amber-500/15 border border-amber-500/30 text-amber-900 text-xs space-y-2">
+              <div className="flex items-center gap-2 font-bold text-amber-800">
+                <span className="material-symbols-outlined text-[20px] text-amber-700">warning</span>
+                <span>Terdeteksi Membuka dari WhatsApp</span>
+              </div>
+              <p className="leading-relaxed text-[11.5px] text-amber-900/90">
+                Browser internal WhatsApp membatasi penginstalan langsung ke Layar Utama. Agar dapat diinstal, buka situs ini di browser bawaan ponsel Anda:
+              </p>
+              <div className="space-y-1.5 text-[11px] font-medium bg-amber-500/10 p-2.5 rounded-lg border border-amber-500/20">
+                <p><strong>Cara 1:</strong> Ketuk tombol <strong>titik tiga (⋮)</strong> di pojok kanan atas WhatsApp lalu pilih <em>"Buka di Browser / Chrome / Safari"</em>.</p>
+                <p><strong>Cara 2:</strong> Salin tautan undangan dan tempel langsung di browser Chrome atau Safari:</p>
+              </div>
+              <button
+                onClick={handleCopyLink}
+                className="w-full py-2.5 px-3 rounded-xl bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-xs active:scale-95 transition-transform"
+              >
+                <span className="material-symbols-outlined text-[16px]">
+                  {copiedLink ? 'check' : 'content_copy'}
+                </span>
+                <span>{copiedLink ? 'Tautan Berhasil Disalin!' : 'Salin Tautan Undangan'}</span>
+              </button>
+            </div>
+          )}
+
           {isAppInstalled ? (
             <div className="p-4 rounded-xl bg-primary/10 border border-primary/20 text-center space-y-2">
               <span className="material-symbols-outlined text-primary text-[32px]">
@@ -66,11 +109,11 @@ export const InstallAppModal: React.FC = () => {
             </div>
           ) : (
             <>
-              {/* Direct 1-Click Install Button if supported */}
+              {/* Direct 1-Click Install Button if supported by Chrome */}
               {deferredPrompt && (
                 <button
                   onClick={installPWA}
-                  className="w-full py-3.5 px-4 rounded-xl bg-primary text-on-primary font-label-md text-label-md uppercase tracking-wider font-bold shadow-md hover:opacity-95 active:scale-[0.99] transition-all flex items-center justify-center gap-2 mb-2"
+                  className="w-full py-3.5 px-4 rounded-xl bg-primary text-on-primary font-label-md text-label-md uppercase tracking-wider font-bold shadow-md hover:opacity-95 active:scale-[0.99] transition-all flex items-center justify-center gap-2 mb-2 animate-pulse"
                 >
                   <span className="material-symbols-outlined text-[20px]">download</span>
                   <span>Pasang Sekarang (1-Klik)</span>
@@ -113,7 +156,7 @@ export const InstallAppModal: React.FC = () => {
                       1
                     </div>
                     <div className="text-xs text-on-surface leading-relaxed">
-                      Buka situs ini di browser <span className="font-semibold text-primary">Safari</span>, lalu ketuk tombol <span className="font-semibold">Bagikan (Share)</span>{' '}
+                      Buka situs ini di browser <strong className="text-primary">Safari</strong>, lalu ketuk tombol <strong className="text-primary">Bagikan (Share)</strong>{' '}
                       <span className="inline-flex items-center px-1.5 py-0.5 bg-surface rounded border border-outline-variant/40 font-mono text-[11px]">
                         <span className="material-symbols-outlined text-[14px]">ios_share</span>
                       </span>{' '}
@@ -127,7 +170,7 @@ export const InstallAppModal: React.FC = () => {
                     </div>
                     <div className="text-xs text-on-surface leading-relaxed">
                       Gulir ke bawah dan ketuk opsi{' '}
-                      <span className="font-bold text-primary">"Tambah ke Layar Utama"</span>{' '}
+                      <strong className="text-primary">"Tambah ke Layar Utama"</strong>{' '}
                       <span className="inline-flex items-center px-1.5 py-0.5 bg-surface rounded border border-outline-variant/40 text-[11px]">
                         <span className="material-symbols-outlined text-[14px]">add_box</span> (Add to Home Screen)
                       </span>.
@@ -139,7 +182,7 @@ export const InstallAppModal: React.FC = () => {
                       3
                     </div>
                     <div className="text-xs text-on-surface leading-relaxed">
-                      Ketuk <span className="font-bold text-primary">"Tambah" (Add)</span> di pojok kanan atas. Ikon WedSnap akan langsung muncul di Layar Utama HP Anda seperti aplikasi native!
+                      Ketuk <strong className="text-primary">"Tambah" (Add)</strong> di pojok kanan atas. Ikon WedSnap akan langsung muncul di Layar Utama HP Anda seperti aplikasi native!
                     </div>
                   </div>
                 </div>
@@ -150,7 +193,7 @@ export const InstallAppModal: React.FC = () => {
                       1
                     </div>
                     <div className="text-xs text-on-surface leading-relaxed">
-                      Buka menu browser Chrome dengan mengetuk ikon <span className="font-bold">titik tiga (⋮)</span> di pojok kanan atas layar.
+                      Buka menu browser Chrome dengan mengetuk ikon <strong className="text-primary">titik tiga (⋮)</strong> di pojok kanan atas layar.
                     </div>
                   </div>
 
@@ -159,7 +202,7 @@ export const InstallAppModal: React.FC = () => {
                       2
                     </div>
                     <div className="text-xs text-on-surface leading-relaxed">
-                      Pilih <span className="font-bold text-primary">"Instal aplikasi"</span> atau <span className="font-bold text-primary">"Tambahkan ke Layar Utama"</span>.
+                      Pilih menu <strong className="text-primary">"Instal aplikasi"</strong> atau <strong className="text-primary">"Tambahkan ke Layar Utama"</strong>.
                     </div>
                   </div>
 
@@ -210,4 +253,3 @@ export const InstallAppModal: React.FC = () => {
     </div>
   );
 };
-

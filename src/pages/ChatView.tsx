@@ -99,8 +99,8 @@ export const ChatView: React.FC = () => {
               </span>
             </div>
             <p className="font-body-sm text-body-sm text-on-surface-variant text-[11px] truncate flex items-center gap-1 mt-0.5">
-              <span className="w-1.5 h-1.5 rounded-full bg-secondary animate-pulse inline-block"></span>
-              <span>Grup Resmi Tamu Undangan • Aktif di Acara</span>
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse inline-block"></span>
+              <span className="font-semibold text-emerald-700">Terhubung Langsung Antar Tamu • Real-time</span>
             </p>
           </div>
         </div>

@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import { Photo, EventSettings, GuestWish, AppRoute, ToastMessage, GuestIdentity, ChatMessage } from '../types';
 import { initialPhotos, initialEventSettings, initialWishes, initialGuestActivities, initialChatMessages } from '../utils/seedData';
 import { safeStorage } from '../utils/storage';
+import { fetchRemoteMessages, persistRemoteMessages, broadcastNewMessage, broadcastReaction, subscribeToRealtimeChat } from '../utils/chatSync';
 import confetti from 'canvas-confetti';
 
 interface AppContextType {
@@ -299,7 +300,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     safeStorage.setItem('wedsnap_wishes', JSON.stringify(wishes));
   }, [wishes]);
 
-  // Guest Group Chat Messages
+  // Guest Group Chat Messages (synced across all guest devices)
   const [chatMessages, setChatMessages] = useState<ChatMessage[]>(() => {
     const saved = safeStorage.getItem('wedsnap_chat_messages');
     if (saved) {
@@ -315,10 +316,90 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     return initialChatMessages;
   });
 
-  // Save chat messages to storage
+  // Save chat messages to local storage cache
   useEffect(() => {
     safeStorage.setItem('wedsnap_chat_messages', JSON.stringify(chatMessages));
   }, [chatMessages]);
+
+  // Real-time cross-device synchronization (SSE + Cloud Database + Background Polling)
+  useEffect(() => {
+    let isMounted = true;
+
+    // Helper to merge remote messages with local state safely
+    const mergeMessages = (remoteList: ChatMessage[]) => {
+      setChatMessages((prev) => {
+        const map = new Map<string, ChatMessage>();
+        prev.forEach((m) => map.set(m.id, m));
+        let hasNew = false;
+        remoteList.forEach((rm) => {
+          if (!map.has(rm.id)) {
+            hasNew = true;
+            map.set(rm.id, {
+              ...rm,
+              isMyMessage: Boolean(guestIdentity?.name && rm.senderName === guestIdentity.name)
+            });
+          }
+        });
+        return hasNew ? Array.from(map.values()) : prev;
+      });
+    };
+
+    // 1. Initial fetch from cloud database
+    fetchRemoteMessages().then((remote) => {
+      if (isMounted && remote && remote.length > 0) {
+        mergeMessages(remote);
+      }
+    });
+
+    // 2. Real-time SSE stream listener (instant push without polling lag)
+    const unsubscribe = subscribeToRealtimeChat(
+      (incomingMsg) => {
+        if (!isMounted) return;
+        setChatMessages((prev) => {
+          if (prev.some((m) => m.id === incomingMsg.id)) return prev;
+          const isMe = Boolean(guestIdentity?.name && incomingMsg.senderName === guestIdentity.name);
+          if (!isMe) {
+            showToast('chat', `Pesan baru dari ${incomingMsg.senderName}`);
+          }
+          return [
+            ...prev,
+            {
+              ...incomingMsg,
+              isMyMessage: isMe
+            }
+          ];
+        });
+      },
+      (msgId, emoji) => {
+        if (!isMounted) return;
+        setChatMessages((prev) =>
+          prev.map((msg) => {
+            if (msg.id === msgId) {
+              const reactions = { ...(msg.reactions || {}) };
+              reactions[emoji] = (reactions[emoji] || 0) + 1;
+              return { ...msg, reactions };
+            }
+            return msg;
+          })
+        );
+      }
+    );
+
+    // 3. Fallback polling every 5 seconds to guarantee all devices stay in sync
+    const pollInterval = setInterval(() => {
+      fetchRemoteMessages().then((remote) => {
+        if (isMounted && remote && remote.length > 0) {
+          mergeMessages(remote);
+        }
+      });
+    }, 5000);
+
+    return () => {
+      isMounted = false;
+      unsubscribe();
+      clearInterval(pollInterval);
+    };
+  }, [guestIdentity?.name]);
 
   const sendChatMessage = (text: string) => {
     const trimmed = text.trim();
@@ -334,7 +415,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     const timeStr = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')} WIB`;
 
     const newMsg: ChatMessage = {
-      id: `chat-${Date.now()}`,
+      id: `chat-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
       senderName: guestIdentity.name.trim(),
       senderInitials: getGuestInitials(guestIdentity.name),
       relationship: guestIdentity.relationship || 'Tamu Undangan',
@@ -345,21 +426,34 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       reactions: {}
     };
 
-    setChatMessages((prev) => [...prev, newMsg]);
-    showToast('send', 'Pesan Anda berhasil dikirim ke grup obrolan tamu!');
+    // Optimistically update local state
+    setChatMessages((prev) => {
+      const next = [...prev, newMsg];
+      // Persist to cloud database so other devices fetch it
+      persistRemoteMessages(next);
+      return next;
+    });
+
+    // Broadcast in real-time to all connected devices
+    broadcastNewMessage(newMsg);
+    showToast('send', 'Pesan Anda berhasil dikirim ke semua tamu undangan!');
   };
 
   const addChatReaction = (messageId: string, emoji: string) => {
-    setChatMessages((prev) =>
-      prev.map((msg) => {
+    setChatMessages((prev) => {
+      const next = prev.map((msg) => {
         if (msg.id === messageId) {
           const reactions = { ...(msg.reactions || {}) };
           reactions[emoji] = (reactions[emoji] || 0) + 1;
           return { ...msg, reactions };
         }
         return msg;
-      })
-    );
+      });
+      persistRemoteMessages(next);
+      return next;
+    });
+
+    broadcastReaction(messageId, emoji);
   };
 
   // Save settings (always ensuring coupleNames cannot be tampered)
