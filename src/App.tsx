@@ -20,7 +20,13 @@ export const AppContent: React.FC = () => {
       <Header />
 
       {/* Main Content Area */}
-      <main className="flex-1 flex flex-col relative w-full pt-20 pb-28 bg-surface">
+      <main
+        className={`flex-1 flex flex-col relative w-full ${
+          currentRoute === 'camera'
+            ? 'pt-16 pb-20 h-[100dvh] max-h-[100dvh] overflow-hidden'
+            : 'pt-20 pb-28 min-h-screen'
+        } bg-surface`}
+      >
         {currentRoute === 'camera' && <CameraView />}
         {currentRoute === 'review' && <ReviewView />}
         {currentRoute === 'gallery' && <GalleryView />}
