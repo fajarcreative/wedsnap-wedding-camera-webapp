@@ -41,15 +41,6 @@
 </head>
 <body class="bg-surface font-sans text-on-surface antialiased selection:bg-primary-fixed selection:text-on-primary-fixed">
   <div id="root"></div>
-  <script>
-    // Fallback otomatis jika dibuka lewat Live Server biasa atau tanpa Vite dev server
-    setTimeout(function() {
-      var root = document.getElementById('root');
-      if (root && root.children.length === 0) {
-        window.location.replace('./dist/index.html' + window.location.hash);
-      }
-    }, 800);
-  </script>
 </body>
 </html>
 
