@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { Photo, EventSettings, GuestWish, AppRoute, ToastMessage, GuestIdentity, ChatMessage } from '../types';
 import { initialPhotos, initialEventSettings, initialWishes, initialGuestActivities, initialChatMessages } from '../utils/seedData';
+import { safeStorage } from '../utils/storage';
 import confetti from 'canvas-confetti';
 
 interface AppContextType {
@@ -63,22 +64,22 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   // Empty state mode (keeps default clean)
   const [isEmptyStateMode, setIsEmptyStateMode] = useState<boolean>(() => {
-    return localStorage.getItem('wedsnap_empty_mode') === 'true';
+    return safeStorage.getItem('wedsnap_empty_mode') === 'true';
   });
 
   // Ensure fresh clean session for all new visitors or resets
-  if (typeof window !== 'undefined' && localStorage.getItem('wedsnap_v6_clean_slate') !== 'true') {
-    localStorage.removeItem('wedsnap_photos');
-    localStorage.removeItem('wedsnap_shots_remaining');
-    localStorage.removeItem('wedsnap_wishes');
-    localStorage.removeItem('wedsnap_settings');
-    localStorage.removeItem('wedsnap_empty_mode');
-    localStorage.setItem('wedsnap_v6_clean_slate', 'true');
+  if (typeof window !== 'undefined' && safeStorage.getItem('wedsnap_v6_clean_slate') !== 'true') {
+    safeStorage.removeItem('wedsnap_photos');
+    safeStorage.removeItem('wedsnap_shots_remaining');
+    safeStorage.removeItem('wedsnap_wishes');
+    safeStorage.removeItem('wedsnap_settings');
+    safeStorage.removeItem('wedsnap_empty_mode');
+    safeStorage.setItem('wedsnap_v6_clean_slate', 'true');
   }
 
   // Guest Identity State (mandatory for all guests)
   const [guestIdentity, setGuestIdentity] = useState<GuestIdentity | null>(() => {
-    const saved = localStorage.getItem('wedsnap_guest_identity');
+    const saved = safeStorage.getItem('wedsnap_guest_identity');
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
@@ -95,7 +96,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   // If no guest identity is set, prompt modal immediately on open
   const [isIdentityModalOpen, setIsIdentityModalOpen] = useState<boolean>(() => {
     if (typeof window === 'undefined') return false;
-    const saved = localStorage.getItem('wedsnap_guest_identity');
+    const saved = safeStorage.getItem('wedsnap_guest_identity');
     if (!saved) return true;
     try {
       const parsed = JSON.parse(saved);
@@ -131,7 +132,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       registeredAt: identity.registeredAt || new Date().toISOString()
     };
     setGuestIdentity(updated);
-    localStorage.setItem('wedsnap_guest_identity', JSON.stringify(updated));
+    safeStorage.setItem('wedsnap_guest_identity', JSON.stringify(updated));
     setIsIdentityModalOpen(false);
     showToast('badge', `Selamat datang, ${updated.name}! Identitas Anda telah aktif.`);
   };
@@ -179,12 +180,12 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   // Photos state
   const [photos, setPhotos] = useState<Photo[]>(() => {
-    const saved = localStorage.getItem('wedsnap_photos');
+    const saved = safeStorage.getItem('wedsnap_photos');
     if (saved) {
       try {
         return JSON.parse(saved);
       } catch (e) {
-        console.error('Error parsing photos from localStorage', e);
+        console.error('Error parsing photos from storage', e);
       }
     }
     return initialPhotos;
@@ -192,7 +193,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   // Guest film exposures remaining (starts fresh with full 36 shots)
   const [shotsRemaining, setShotsRemaining] = useState<number>(() => {
-    const saved = localStorage.getItem('wedsnap_shots_remaining');
+    const saved = safeStorage.getItem('wedsnap_shots_remaining');
     return saved ? parseInt(saved, 10) : 36;
   });
 
@@ -200,7 +201,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   // Wishes state
   const [wishes, setWishes] = useState<GuestWish[]>(() => {
-    const saved = localStorage.getItem('wedsnap_wishes');
+    const saved = safeStorage.getItem('wedsnap_wishes');
     if (saved) {
       try {
         return JSON.parse(saved);
@@ -215,7 +216,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   // Event settings - coupleNames, date, venue are strictly locked and immutable
   const [eventSettings, setEventSettings] = useState<EventSettings>(() => {
-    const saved = localStorage.getItem('wedsnap_settings');
+    const saved = safeStorage.getItem('wedsnap_settings');
     let parsed: Partial<EventSettings> = {};
     if (saved) {
       try {
@@ -248,8 +249,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const resetFilmRoll = () => {
     setShotsRemaining(36);
     setPhotos(initialPhotos);
-    localStorage.setItem('wedsnap_shots_remaining', '36');
-    localStorage.setItem('wedsnap_photos', JSON.stringify(initialPhotos));
+    safeStorage.setItem('wedsnap_shots_remaining', '36');
+    safeStorage.setItem('wedsnap_photos', JSON.stringify(initialPhotos));
     showToast('restart_alt', 'Rol film Anda telah di-reset (36 foto baru siap digunakan)!');
   };
 
@@ -283,24 +284,24 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     return () => window.removeEventListener('hashchange', handleHashChange);
   }, []);
 
-  // Save photos to localStorage
+  // Save photos to storage
   useEffect(() => {
-    localStorage.setItem('wedsnap_photos', JSON.stringify(photos));
+    safeStorage.setItem('wedsnap_photos', JSON.stringify(photos));
   }, [photos]);
 
   // Save shots remaining
   useEffect(() => {
-    localStorage.setItem('wedsnap_shots_remaining', shotsRemaining.toString());
+    safeStorage.setItem('wedsnap_shots_remaining', shotsRemaining.toString());
   }, [shotsRemaining]);
 
   // Save wishes
   useEffect(() => {
-    localStorage.setItem('wedsnap_wishes', JSON.stringify(wishes));
+    safeStorage.setItem('wedsnap_wishes', JSON.stringify(wishes));
   }, [wishes]);
 
   // Guest Group Chat Messages
   const [chatMessages, setChatMessages] = useState<ChatMessage[]>(() => {
-    const saved = localStorage.getItem('wedsnap_chat_messages');
+    const saved = safeStorage.getItem('wedsnap_chat_messages');
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
@@ -314,9 +315,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     return initialChatMessages;
   });
 
-  // Save chat messages to localStorage
+  // Save chat messages to storage
   useEffect(() => {
-    localStorage.setItem('wedsnap_chat_messages', JSON.stringify(chatMessages));
+    safeStorage.setItem('wedsnap_chat_messages', JSON.stringify(chatMessages));
   }, [chatMessages]);
 
   const sendChatMessage = (text: string) => {
@@ -363,7 +364,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   // Save settings (always ensuring coupleNames cannot be tampered)
   useEffect(() => {
-    localStorage.setItem('wedsnap_settings', JSON.stringify(eventSettings));
+    safeStorage.setItem('wedsnap_settings', JSON.stringify(eventSettings));
   }, [eventSettings]);
 
   const showToast = (icon: string, message: string, type: 'success' | 'error' | 'info' = 'success') => {
@@ -377,7 +378,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const toggleEmptyStateMode = () => {
     const newMode = !isEmptyStateMode;
     setIsEmptyStateMode(newMode);
-    localStorage.setItem('wedsnap_empty_mode', newMode.toString());
+    safeStorage.setItem('wedsnap_empty_mode', newMode.toString());
   };
 
   const updateSettings = (partial: Partial<EventSettings>) => {
