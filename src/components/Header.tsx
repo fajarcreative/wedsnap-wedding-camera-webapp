@@ -23,6 +23,8 @@ export const Header: React.FC = () => {
         return 'Review Foto';
       case 'gallery':
         return 'Galeri Bersama';
+      case 'chat':
+        return 'Pesan & Obrolan Tamu';
       case 'dashboard':
         return 'Dashboard Pengantin';
       default:
@@ -94,7 +96,17 @@ export const Header: React.FC = () => {
                 : 'text-on-surface-variant hover:text-on-surface'
             }`}
           >
-            Galeri Bersama
+            Galeri
+          </button>
+          <button
+            onClick={() => navigateTo('chat')}
+            className={`px-3 py-1 rounded-full font-label-md text-label-md transition-all ${
+              currentRoute === 'chat'
+                ? 'bg-primary text-on-primary shadow-xs'
+                : 'text-on-surface-variant hover:text-on-surface'
+            }`}
+          >
+            Pesan Tamu
           </button>
           <button
             onClick={() => navigateTo('dashboard')}
@@ -104,7 +116,7 @@ export const Header: React.FC = () => {
                 : 'text-on-surface-variant hover:text-on-surface'
             }`}
           >
-            Dashboard Pengantin
+            Dashboard
           </button>
         </div>
 

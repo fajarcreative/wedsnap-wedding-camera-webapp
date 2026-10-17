@@ -352,7 +352,7 @@ export const HomeView: React.FC = () => {
           Aktivitas Tamu di Pernikahan
         </h4>
 
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
           {/* Action 1: Buka Kamera Sekali Pakai */}
           <div
             onClick={() => navigateTo('camera')}
@@ -379,7 +379,34 @@ export const HomeView: React.FC = () => {
             </div>
           </div>
 
-          {/* Action 2: Review & Kirim Doa */}
+          {/* Action 2: Obrolan Tamu (Grup Chat WA) */}
+          <div
+            onClick={() => navigateTo('chat')}
+            className="p-4 rounded-2xl bg-surface-container-low hover:bg-surface-container border border-outline-variant/30 text-on-surface shadow-xs hover:shadow-sm transition-all cursor-pointer group active:scale-[0.98] flex flex-col justify-between min-h-[140px]"
+          >
+            <div className="flex items-center justify-between">
+              <span className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
+                <span className="material-symbols-outlined text-[24px]">chat</span>
+              </span>
+              <span className="text-[11px] font-semibold text-primary flex items-center gap-1">
+                <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span>
+                <span>Grup Tamu</span>
+              </span>
+            </div>
+            <div>
+              <h5 className="font-bold text-base mt-3 leading-tight text-on-surface flex items-center gap-1">
+                <span>Obrolan Tamu</span>
+                <span className="material-symbols-outlined text-[16px] text-primary group-hover:translate-x-1 transition-transform">
+                  arrow_forward
+                </span>
+              </h5>
+              <p className="text-xs text-on-surface-variant mt-1">
+                Chat sesama tamu undangan & sampaikan ucapan selamat seperti di grup WA.
+              </p>
+            </div>
+          </div>
+
+          {/* Action 3: Review & Kirim Doa */}
           <div
             onClick={() => navigateTo('review')}
             className="p-4 rounded-2xl bg-surface-container-low hover:bg-surface-container border border-outline-variant/30 text-on-surface shadow-xs hover:shadow-sm transition-all cursor-pointer group active:scale-[0.98] flex flex-col justify-between min-h-[140px]"
@@ -405,7 +432,7 @@ export const HomeView: React.FC = () => {
             </div>
           </div>
 
-          {/* Action 3: Galeri Bersama */}
+          {/* Action 4: Galeri Bersama */}
           <div
             onClick={() => navigateTo('gallery')}
             className="p-4 rounded-2xl bg-surface-container-low hover:bg-surface-container border border-outline-variant/30 text-on-surface shadow-xs hover:shadow-sm transition-all cursor-pointer group active:scale-[0.98] flex flex-col justify-between min-h-[140px]"
@@ -471,3 +498,4 @@ export const HomeView: React.FC = () => {
     </div>
   );
 };
+

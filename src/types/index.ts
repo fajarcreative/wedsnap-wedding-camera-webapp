@@ -39,7 +39,7 @@ export interface EventSettings {
   guestPrivacy: boolean;
 }
 
-export type AppRoute = 'home' | 'camera' | 'review' | 'gallery' | 'dashboard';
+export type AppRoute = 'home' | 'camera' | 'review' | 'gallery' | 'chat' | 'dashboard';
 
 export interface ToastMessage {
   id: string;
@@ -53,5 +53,18 @@ export interface GuestIdentity {
   address: string;
   relationship: string;
   registeredAt?: string;
+}
+
+export interface ChatMessage {
+  id: string;
+  senderName: string;
+  senderInitials: string;
+  relationship: string;
+  address: string;
+  message: string;
+  timestamp: string;
+  isMyMessage?: boolean;
+  avatarColor?: string;
+  reactions?: Record<string, number>;
 }
 

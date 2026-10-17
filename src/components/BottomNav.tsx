@@ -74,7 +74,7 @@ export const BottomNav: React.FC = () => {
         <button
           onClick={() => navigateTo('gallery')}
           aria-current={currentRoute === 'gallery' ? 'page' : undefined}
-          className={`relative flex flex-col items-center justify-center min-w-[64px] min-h-[44px] py-1 transition-colors ${
+          className={`relative flex flex-col items-center justify-center min-w-[50px] min-h-[44px] py-1 transition-colors ${
             currentRoute === 'gallery'
               ? 'text-primary font-semibold'
               : 'text-on-surface-variant hover:text-on-surface'
@@ -84,14 +84,31 @@ export const BottomNav: React.FC = () => {
           <span className="font-label-sm text-label-sm mt-0.5 tracking-tight text-[11px]">
             Galeri
           </span>
-          <span className="absolute top-1.5 right-3 w-2 h-2 rounded-full bg-secondary animate-ping"></span>
+          <span className="absolute top-1.5 right-2 w-2 h-2 rounded-full bg-secondary animate-ping"></span>
+        </button>
+
+        {/* Pesan Tamu (Group Chat) Tab */}
+        <button
+          onClick={() => navigateTo('chat')}
+          aria-current={currentRoute === 'chat' ? 'page' : undefined}
+          className={`relative flex flex-col items-center justify-center min-w-[50px] min-h-[44px] py-1 transition-colors ${
+            currentRoute === 'chat'
+              ? 'text-primary font-semibold'
+              : 'text-on-surface-variant hover:text-on-surface'
+          }`}
+        >
+          <span className="material-symbols-outlined text-[24px]">chat</span>
+          <span className="font-label-sm text-label-sm mt-0.5 tracking-tight text-[11px]">
+            Pesan
+          </span>
+          <span className="absolute top-1.5 right-2 w-2 h-2 rounded-full bg-primary animate-pulse"></span>
         </button>
 
         {/* Pengantin Dashboard Tab */}
         <button
           onClick={() => navigateTo('dashboard')}
           aria-current={currentRoute === 'dashboard' ? 'page' : undefined}
-          className={`relative flex flex-col items-center justify-center min-w-[64px] min-h-[44px] py-1 transition-colors ${
+          className={`relative flex flex-col items-center justify-center min-w-[50px] min-h-[44px] py-1 transition-colors ${
             currentRoute === 'dashboard'
               ? 'text-primary font-semibold'
               : 'text-on-surface-variant hover:text-on-surface'

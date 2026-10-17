@@ -1,4 +1,4 @@
-import { Photo, EventSettings, GuestWish } from '../types';
+import { Photo, EventSettings, GuestWish, ChatMessage } from '../types';
 
 export const initialEventSettings: EventSettings = {
   title: 'Pernikahan Suci',
@@ -196,4 +196,58 @@ export const initialGuestActivities = [
     thumbnail: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCEPRAxuILCiiA1IzpsHz2SXVmiDebFxj5pmGgAxz2PiJH-LX86qI4qjnu8NeqIxhJEyaHY4xl0R8PBL6fzeV1Y0IGqiGoIfXRuXw6I3PYyoePAJHemUNme4TN_poCH8BzXa24-_me_TPXTLXOyRz82KPt4kLjSOTcJUBXa9wQKLToHDXCDzu-8cWF294bfczVUkVH5spbKvILOK9HVy61F_NaIMKO-O-UUL_0ktmomW0paQeYv7Zsk4Q'
   }
 ];
+
+export const initialChatMessages: ChatMessage[] = [
+  {
+    id: 'msg-1',
+    senderName: 'Dimas Prasetyo',
+    senderInitials: 'DP',
+    relationship: 'Sahabat Fajar',
+    address: 'Bandung • Meja Bestman',
+    message: 'Selamat menempuh hidup baru Fajar & Aulia! 🎉 Semoga menjadi keluarga sakinah mawaddah warahmah. Bro Fajar gagah banget hari ini!',
+    timestamp: '11:15 WIB',
+    reactions: { '❤️': 8, '👏': 5 }
+  },
+  {
+    id: 'msg-2',
+    senderName: 'Nadia Salsabila',
+    senderInitials: 'NS',
+    relationship: 'Sahabat Aulia',
+    address: 'Jakarta Selatan • Meja Bridesmaids',
+    message: 'MasyaAllah Aulia cantik banget pangling poll! 🥹✨ Selamat yaa sayang, langgeng bahagia sampai kakek nenek!',
+    timestamp: '11:22 WIB',
+    reactions: { '❤️': 12, '🎉': 4 }
+  },
+  {
+    id: 'msg-3',
+    senderName: 'Pak Hendro Kusumo',
+    senderInitials: 'HK',
+    relationship: 'Keluarga Fajar',
+    address: 'Surabaya • Meja VIP 01',
+    message: 'Alhamdulillah prosesi akad nikah berjalan lancar & khidmat. Selamat untuk kedua mempelai dan besan sekalian. Doa terbaik dari keluarga Surabaya 🤲',
+    timestamp: '11:40 WIB',
+    reactions: { '🤲': 15, '❤️': 6 }
+  },
+  {
+    id: 'msg-4',
+    senderName: 'Bagas Arya',
+    senderInitials: 'BA',
+    relationship: 'Teman Kuliah / Sekolah',
+    address: 'Yogyakarta • Meja 08',
+    message: 'Akhirnya sah juga yaa setelah perjalanan panjang! Ditunggu traktiran jalan-jalannya brader! 🥂 Selamat Fajar & Aulia!',
+    timestamp: '12:05 WIB',
+    reactions: { '🥂': 7, '😂': 4 }
+  },
+  {
+    id: 'msg-5',
+    senderName: 'Rina & Irfan',
+    senderInitials: 'RI',
+    relationship: 'Rekan Kerja',
+    address: 'Tangerang • Meja 05',
+    message: 'Selamat berbahagia Fajar & Aulia! Dekorasi dan makanannya luar biasa sedap! Sukses selalu karier dan rumah tangganya yaa 💐✨',
+    timestamp: '12:30 WIB',
+    reactions: { '❤️': 9, '🌸': 3 }
+  }
+];
+
 

@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { Photo, EventSettings, GuestWish, AppRoute, ToastMessage, GuestIdentity } from '../types';
-import { initialPhotos, initialEventSettings, initialWishes, initialGuestActivities } from '../utils/seedData';
+import { Photo, EventSettings, GuestWish, AppRoute, ToastMessage, GuestIdentity, ChatMessage } from '../types';
+import { initialPhotos, initialEventSettings, initialWishes, initialGuestActivities, initialChatMessages } from '../utils/seedData';
 import confetti from 'canvas-confetti';
 
 interface AppContextType {
@@ -43,6 +43,10 @@ interface AppContextType {
   isInstallModalOpen: boolean;
   setIsInstallModalOpen: (open: boolean) => void;
   installPWA: () => Promise<void>;
+  // Guest Chat Group
+  chatMessages: ChatMessage[];
+  sendChatMessage: (text: string) => void;
+  addChatReaction: (messageId: string, emoji: string) => void;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -51,7 +55,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   // Navigation state (supports hash routing as fallback, default to home)
   const [currentRoute, setCurrentRoute] = useState<AppRoute>(() => {
     const hash = window.location.hash.replace('#', '') as AppRoute;
-    if (['home', 'camera', 'review', 'gallery', 'dashboard'].includes(hash)) {
+    if (['home', 'camera', 'review', 'gallery', 'chat', 'dashboard'].includes(hash)) {
       return hash;
     }
     return 'home';
@@ -271,7 +275,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   useEffect(() => {
     const handleHashChange = () => {
       const hash = window.location.hash.replace('#', '') as AppRoute;
-      if (['home', 'camera', 'review', 'gallery', 'dashboard'].includes(hash)) {
+      if (['home', 'camera', 'review', 'gallery', 'chat', 'dashboard'].includes(hash)) {
         setCurrentRoute(hash);
       }
     };
@@ -293,6 +297,69 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   useEffect(() => {
     localStorage.setItem('wedsnap_wishes', JSON.stringify(wishes));
   }, [wishes]);
+
+  // Guest Group Chat Messages
+  const [chatMessages, setChatMessages] = useState<ChatMessage[]>(() => {
+    const saved = localStorage.getItem('wedsnap_chat_messages');
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          return parsed;
+        }
+      } catch (e) {
+        console.error('Error parsing chat messages', e);
+      }
+    }
+    return initialChatMessages;
+  });
+
+  // Save chat messages to localStorage
+  useEffect(() => {
+    localStorage.setItem('wedsnap_chat_messages', JSON.stringify(chatMessages));
+  }, [chatMessages]);
+
+  const sendChatMessage = (text: string) => {
+    const trimmed = text.trim();
+    if (!trimmed) return;
+
+    if (!guestIdentity?.name) {
+      setIsIdentityModalOpen(true);
+      showToast('info', 'Mohon lengkapi identitas Anda terlebih dahulu untuk mengirim pesan');
+      return;
+    }
+
+    const now = new Date();
+    const timeStr = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')} WIB`;
+
+    const newMsg: ChatMessage = {
+      id: `chat-${Date.now()}`,
+      senderName: guestIdentity.name.trim(),
+      senderInitials: getGuestInitials(guestIdentity.name),
+      relationship: guestIdentity.relationship || 'Tamu Undangan',
+      address: guestIdentity.address || 'Meja Tamu',
+      message: trimmed,
+      timestamp: timeStr,
+      isMyMessage: true,
+      reactions: {}
+    };
+
+    setChatMessages((prev) => [...prev, newMsg]);
+    showToast('send', 'Pesan Anda berhasil dikirim ke grup obrolan tamu!');
+  };
+
+  const addChatReaction = (messageId: string, emoji: string) => {
+    setChatMessages((prev) =>
+      prev.map((msg) => {
+        if (msg.id === messageId) {
+          const reactions = { ...(msg.reactions || {}) };
+          reactions[emoji] = (reactions[emoji] || 0) + 1;
+          return { ...msg, reactions };
+        }
+        return msg;
+      })
+    );
+  };
 
   // Save settings (always ensuring coupleNames cannot be tampered)
   useEffect(() => {
@@ -521,7 +588,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         isAppInstalled,
         isInstallModalOpen,
         setIsInstallModalOpen,
-        installPWA
+        installPWA,
+        chatMessages,
+        sendChatMessage,
+        addChatReaction
       }}
     >
       {children}

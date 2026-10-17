@@ -12,6 +12,7 @@ import { HomeView } from './pages/HomeView';
 import { CameraView } from './pages/CameraView';
 import { ReviewView } from './pages/ReviewView';
 import { GalleryView } from './pages/GalleryView';
+import { ChatView } from './pages/ChatView';
 import { DashboardView } from './pages/DashboardView';
 
 export const AppContent: React.FC = () => {
@@ -25,7 +26,7 @@ export const AppContent: React.FC = () => {
       {/* Main Content Area */}
       <main
         className={`flex-1 flex flex-col relative w-full ${
-          currentRoute === 'camera'
+          currentRoute === 'camera' || currentRoute === 'chat'
             ? 'pt-16 pb-20 h-[100dvh] max-h-[100dvh] overflow-hidden'
             : 'pt-20 pb-28 min-h-screen'
         } bg-surface`}
@@ -34,6 +35,7 @@ export const AppContent: React.FC = () => {
         {currentRoute === 'camera' && <CameraView />}
         {currentRoute === 'review' && <ReviewView />}
         {currentRoute === 'gallery' && <GalleryView />}
+        {currentRoute === 'chat' && <ChatView />}
         {currentRoute === 'dashboard' && <DashboardView />}
       </main>
 
