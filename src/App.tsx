@@ -8,6 +8,7 @@ import { SlideshowModal } from './components/SlideshowModal';
 import { TableQRModal } from './components/TableQRModal';
 import { GuestIdentityModal } from './components/GuestIdentityModal';
 import { InstallAppModal } from './components/InstallAppModal';
+import { HomeView } from './pages/HomeView';
 import { CameraView } from './pages/CameraView';
 import { ReviewView } from './pages/ReviewView';
 import { GalleryView } from './pages/GalleryView';
@@ -29,6 +30,7 @@ export const AppContent: React.FC = () => {
             : 'pt-20 pb-28 min-h-screen'
         } bg-surface`}
       >
+        {currentRoute === 'home' && <HomeView />}
         {currentRoute === 'camera' && <CameraView />}
         {currentRoute === 'review' && <ReviewView />}
         {currentRoute === 'gallery' && <GalleryView />}

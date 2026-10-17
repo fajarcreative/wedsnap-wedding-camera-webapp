@@ -39,7 +39,7 @@ export interface EventSettings {
   guestPrivacy: boolean;
 }
 
-export type AppRoute = 'camera' | 'review' | 'gallery' | 'dashboard';
+export type AppRoute = 'home' | 'camera' | 'review' | 'gallery' | 'dashboard';
 
 export interface ToastMessage {
   id: string;

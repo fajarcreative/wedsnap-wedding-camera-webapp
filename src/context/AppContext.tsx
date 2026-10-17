@@ -48,13 +48,13 @@ interface AppContextType {
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  // Navigation state (supports hash routing as fallback)
+  // Navigation state (supports hash routing as fallback, default to home)
   const [currentRoute, setCurrentRoute] = useState<AppRoute>(() => {
     const hash = window.location.hash.replace('#', '') as AppRoute;
-    if (['camera', 'review', 'gallery', 'dashboard'].includes(hash)) {
+    if (['home', 'camera', 'review', 'gallery', 'dashboard'].includes(hash)) {
       return hash;
     }
-    return 'camera';
+    return 'home';
   });
 
   // Empty state mode (keeps default clean)
@@ -271,7 +271,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   useEffect(() => {
     const handleHashChange = () => {
       const hash = window.location.hash.replace('#', '') as AppRoute;
-      if (['camera', 'review', 'gallery', 'dashboard'].includes(hash)) {
+      if (['home', 'camera', 'review', 'gallery', 'dashboard'].includes(hash)) {
         setCurrentRoute(hash);
       }
     };

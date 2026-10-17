@@ -15,6 +15,8 @@ export const Header: React.FC = () => {
 
   const getPageTitle = (route: AppRoute) => {
     switch (route) {
+      case 'home':
+        return 'Beranda';
       case 'camera':
         return 'Camera View';
       case 'review':
@@ -32,8 +34,12 @@ export const Header: React.FC = () => {
     <header className="fixed top-0 inset-x-0 z-50 bg-surface/85 backdrop-blur-xl shadow-[0_1px_12px_rgba(119,90,25,0.05)] pt-safe border-b border-outline-variant/20">
       <div className="h-16 px-gutter flex items-center justify-between gap-space-sm max-w-5xl mx-auto w-full">
         {/* Brand & Page Info */}
-        <div className="flex items-center gap-space-sm min-w-0">
-          <div className="h-9 w-9 rounded-xl bg-gradient-to-br from-primary-container to-primary flex items-center justify-center shadow-xs flex-shrink-0">
+        <div 
+          onClick={() => navigateTo('home')}
+          className="flex items-center gap-space-sm min-w-0 cursor-pointer group"
+          title="Ke Beranda"
+        >
+          <div className="h-9 w-9 rounded-xl bg-gradient-to-br from-primary-container to-primary flex items-center justify-center shadow-xs flex-shrink-0 group-hover:scale-105 transition-transform">
             <span className="material-symbols-outlined text-on-primary text-[20px]">
               photo_camera
             </span>
@@ -50,6 +56,16 @@ export const Header: React.FC = () => {
 
         {/* Desktop Navigation Navigation Pills */}
         <div className="hidden md:flex items-center gap-1 bg-surface-container/60 p-1 rounded-full">
+          <button
+            onClick={() => navigateTo('home')}
+            className={`px-3 py-1 rounded-full font-label-md text-label-md transition-all ${
+              currentRoute === 'home'
+                ? 'bg-primary text-on-primary shadow-xs'
+                : 'text-on-surface-variant hover:text-on-surface'
+            }`}
+          >
+            Beranda
+          </button>
           <button
             onClick={() => navigateTo('camera')}
             className={`px-3 py-1 rounded-full font-label-md text-label-md transition-all ${

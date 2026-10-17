@@ -210,3 +210,4 @@ export const InstallAppModal: React.FC = () => {
     </div>
   );
 };
+

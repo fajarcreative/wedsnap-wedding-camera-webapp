@@ -12,6 +12,22 @@ export const BottomNav: React.FC = () => {
       data-active-classes="text-primary font-semibold"
     >
       <div className="flex justify-around items-center h-20 px-space-xs max-w-lg mx-auto">
+        {/* Beranda Tab */}
+        <button
+          onClick={() => navigateTo('home')}
+          aria-current={currentRoute === 'home' ? 'page' : undefined}
+          className={`relative flex flex-col items-center justify-center min-w-[58px] min-h-[44px] py-1 transition-colors ${
+            currentRoute === 'home'
+              ? 'text-primary font-semibold'
+              : 'text-on-surface-variant hover:text-on-surface'
+          }`}
+        >
+          <span className="material-symbols-outlined text-[24px]">home</span>
+          <span className="font-label-sm text-label-sm mt-0.5 tracking-tight text-[11px]">
+            Beranda
+          </span>
+        </button>
+
         {/* Kamera Tab */}
         <button
           onClick={() => navigateTo('camera')}
