@@ -3,6 +3,7 @@ import { Photo, EventSettings, GuestWish, AppRoute, ToastMessage, GuestIdentity,
 import { initialPhotos, initialEventSettings, initialWishes, initialGuestActivities, initialChatMessages } from '../utils/seedData';
 import { safeStorage } from '../utils/storage';
 import { fetchRemoteMessages, persistRemoteMessages, broadcastNewMessage, broadcastReaction, subscribeToRealtimeChat } from '../utils/chatSync';
+import { getAllPhotosFromDB, savePhotoToDB, saveAllPhotosToDB, deletePhotoFromDB, clearPhotosDB, compressImageForStorage } from '../utils/photoStorage';
 import confetti from 'canvas-confetti';
 
 interface AppContextType {
@@ -76,6 +77,12 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     safeStorage.removeItem('wedsnap_settings');
     safeStorage.removeItem('wedsnap_empty_mode');
     safeStorage.setItem('wedsnap_v6_clean_slate', 'true');
+  }
+
+  // Ensure automatic upgrade to 10k photo storage capacity for all devices
+  if (typeof window !== 'undefined' && safeStorage.getItem('wedsnap_v8_10k_capacity') !== 'true') {
+    safeStorage.setItem('wedsnap_shots_remaining', '10000');
+    safeStorage.setItem('wedsnap_v8_10k_capacity', 'true');
   }
 
   // Guest Identity State (mandatory for all guests)
@@ -192,13 +199,14 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     return initialPhotos;
   });
 
-  // Guest film exposures remaining (starts fresh with full 36 shots)
+  // Guest film exposures remaining (starts fresh with full 10,000 photos capacity)
   const [shotsRemaining, setShotsRemaining] = useState<number>(() => {
     const saved = safeStorage.getItem('wedsnap_shots_remaining');
-    return saved ? parseInt(saved, 10) : 36;
+    const parsed = saved ? parseInt(saved, 10) : 10000;
+    return parsed <= 36 ? 10000 : parsed;
   });
 
-  const totalShotsLimit = 36;
+  const totalShotsLimit = 10000;
 
   // Wishes state
   const [wishes, setWishes] = useState<GuestWish[]>(() => {
@@ -233,7 +241,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       coupleNames: 'Fajar & Aulia',
       date: '25 Oktober 2025',
       venue: 'Sampoerna Strategic Square, Jakarta',
-      maxPerGuest: 36
+      maxCapacity: 10000,
+      maxPerGuest: 10000
     };
   });
 
@@ -246,13 +255,14 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [isSlideshowOpen, setIsSlideshowOpen] = useState(false);
   const [isTableQROpen, setIsTableQROpen] = useState(false);
 
-  // Reset film roll programmatically
+  // Reset film roll programmatically (10,000 photos capacity)
   const resetFilmRoll = () => {
-    setShotsRemaining(36);
+    setShotsRemaining(10000);
     setPhotos(initialPhotos);
-    safeStorage.setItem('wedsnap_shots_remaining', '36');
+    clearPhotosDB().then(() => saveAllPhotosToDB(initialPhotos));
+    safeStorage.setItem('wedsnap_shots_remaining', '10000');
     safeStorage.setItem('wedsnap_photos', JSON.stringify(initialPhotos));
-    showToast('restart_alt', 'Rol film Anda telah di-reset (36 foto baru siap digunakan)!');
+    showToast('restart_alt', 'Kapasitas foto Anda telah di-reset (10.000 foto baru siap digunakan)!');
   };
 
   // Support ?reset=1 URL parameter for instant fresh start if needed
@@ -265,6 +275,17 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         window.history.replaceState({}, '', newUrl);
       }
     }
+  }, []);
+
+  // Initialize and load photos from high-capacity IndexedDB on startup
+  useEffect(() => {
+    getAllPhotosFromDB().then((dbPhotos) => {
+      if (dbPhotos && dbPhotos.length > 0) {
+        setPhotos(dbPhotos);
+      } else {
+        saveAllPhotosToDB(initialPhotos);
+      }
+    });
   }, []);
 
   // Sync route to window hash
@@ -491,23 +512,27 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         coupleNames: 'Fajar & Aulia',
         date: '25 Oktober 2025',
         venue: 'Sampoerna Strategic Square, Jakarta',
-        maxPerGuest: 36
+        maxCapacity: 10000,
+        maxPerGuest: 10000
       };
       showToast('tune', 'Pengaturan acara berhasil diperbarui');
       return updated;
     });
   };
 
-  // Take photo function branded with real guest identity
+  // Take photo function branded with real guest identity and high-capacity IndexedDB storage
   const takePhoto = async (dataUrl: string, caption?: string): Promise<Photo> => {
     if (shotsRemaining <= 0) {
-      showToast('warning', 'Rol film Anda telah habis! Silakan nikmati galeri bersama.', 'error');
-      throw new Error('Rol film habis');
+      showToast('warning', 'Kapasitas foto 10.000 foto telah habis! Silakan nikmati galeri bersama.', 'error');
+      throw new Error('Kapasitas foto habis');
     }
 
     if (!guestIdentity?.name) {
       setIsIdentityModalOpen(true);
     }
+
+    // Compress image to ensure high-capacity storage for up to 10,000 photos
+    const optimizedUrl = await compressImageForStorage(dataUrl, 1280, 0.78);
 
     const nextFrame = totalShotsLimit - shotsRemaining + 1;
     const newId = `user-photo-${Date.now()}`;
@@ -522,7 +547,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
     const newPhoto: Photo = {
       id: newId,
-      url: dataUrl,
+      url: optimizedUrl,
       caption: caption || `Momen Spontan #${nextFrame}`,
       author: guestName,
       authorInitials: guestInitials,
@@ -537,6 +562,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       isUserPhoto: true
     };
 
+    // Save directly to IndexedDB
+    savePhotoToDB(newPhoto);
+
     setPhotos((prev) => [newPhoto, ...prev]);
     const updatedShots = Math.max(0, shotsRemaining - 1);
     setShotsRemaining(updatedShots);
@@ -544,10 +572,17 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     // Simulate upload delay and status change to 'saved'
     setTimeout(() => {
       setPhotos((prev) =>
-        prev.map((p) => (p.id === newId ? { ...p, status: 'saved' } : p))
+        prev.map((p) => {
+          if (p.id === newId) {
+            const savedPhoto = { ...p, status: 'saved' as const };
+            savePhotoToDB(savedPhoto);
+            return savedPhoto;
+          }
+          return p;
+        })
       );
-      showToast('cloud_done', `Foto #${nextFrame} berhasil tersimpan di album kenangan pengantin!`);
-    }, 1500);
+      showToast('cloud_done', `Foto #${nextFrame} berhasil tersimpan di album (Kapasitas 10.000 Foto)!`);
+    }, 1200);
 
     // Add to real-time activity feed with real guest identity
     setGuestActivities((prev) => [
@@ -558,7 +593,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         table: guestTable,
         timeAgo: 'Baru saja',
         photoCount: 1,
-        thumbnail: dataUrl
+        thumbnail: optimizedUrl
       },
       ...prev
     ]);
@@ -567,11 +602,12 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   };
 
   const deletePhoto = (id: string) => {
+    deletePhotoFromDB(id);
     setPhotos((prev) => prev.filter((p) => p.id !== id));
     if (previewPhoto?.id === id) {
       setPreviewPhoto(null);
     }
-    showToast('delete', 'Foto berhasil dihapus dari rol film kamu.');
+    showToast('delete', 'Foto berhasil dihapus dari galeri.');
   };
 
   const retryUpload = (id: string) => {

@@ -5,8 +5,8 @@ export const initialEventSettings: EventSettings = {
   coupleNames: 'Fajar & Aulia',
   date: '25 Oktober 2025',
   venue: 'Sampoerna Strategic Square, Jakarta',
-  maxCapacity: 1000,
-  maxPerGuest: 36,
+  maxCapacity: 10000,
+  maxPerGuest: 10000,
   autoModeration: true,
   limit36Photos: true,
   guestPrivacy: false

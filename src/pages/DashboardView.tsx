@@ -563,14 +563,14 @@ export const DashboardView: React.FC = () => {
             </label>
           </div>
 
-          {/* Setting 2: Guest Photo Limit */}
+          {/* Setting 2: Photo Capacity Limit */}
           <div className="flex items-center justify-between gap-space-sm">
             <div className="space-y-0.5 pr-2">
               <span className="font-label-lg text-label-lg font-semibold text-on-surface block text-sm">
-                Batasi 36 Foto / Tamu
+                Kapasitas 10.000 Foto / Aplikasi
               </span>
               <span className="font-body-sm text-body-sm text-on-surface-variant block text-xs">
-                Sensasi rol film analog sekali pakai agar setiap potret terasa berharga
+                Penyimpanan performa tinggi IndexedDB aktif untuk menampung hingga 10.000 foto
               </span>
             </div>
             <label className="relative inline-flex items-center cursor-pointer flex-shrink-0">

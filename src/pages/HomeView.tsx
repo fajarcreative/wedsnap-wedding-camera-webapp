@@ -363,7 +363,7 @@ export const HomeView: React.FC = () => {
                 <span className="material-symbols-outlined text-[24px]">photo_camera</span>
               </span>
               <span className="font-mono text-xs font-bold px-2 py-0.5 rounded-full bg-surface/25">
-                {shotsRemaining} Sisa Foto
+                {shotsRemaining.toLocaleString()} Sisa Foto
               </span>
             </div>
             <div>

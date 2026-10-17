@@ -43,8 +43,8 @@ export const BottomNav: React.FC = () => {
             Kamera
           </span>
           {shotsRemaining > 0 && (
-            <span className="absolute top-1 right-1 sm:right-2 w-3.5 h-3.5 rounded-full bg-primary text-on-primary text-[8px] flex items-center justify-center font-bold">
-              {shotsRemaining}
+            <span className="absolute top-1 right-1 sm:right-2 min-w-[16px] h-3.5 px-0.5 rounded-full bg-primary text-on-primary text-[8px] flex items-center justify-center font-bold shadow-2xs">
+              {shotsRemaining > 999 ? `${Math.round(shotsRemaining / 1000)}k` : shotsRemaining}
             </span>
           )}
         </button>

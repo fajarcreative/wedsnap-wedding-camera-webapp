@@ -70,7 +70,7 @@ export const ReviewView: React.FC = () => {
         )}
 
         <p className="font-body-sm text-body-sm text-on-surface-variant mt-2">
-          Kamu telah mengambil {takenCount} dari maksimal {totalShotsLimit} foto.
+          Kamu telah mengambil {takenCount.toLocaleString()} dari kapasitas penyimpanan {totalShotsLimit.toLocaleString()} foto.
         </p>
       </header>
 
@@ -79,16 +79,16 @@ export const ReviewView: React.FC = () => {
         <div className="flex items-center justify-between gap-space-sm mb-3">
           <div className="flex items-center gap-space-xs">
             <span className="material-symbols-outlined text-primary text-[20px]">
-              motion_photos_on
+              photo_library
             </span>
             <span className="font-label-md text-label-md text-on-surface tracking-wide uppercase font-semibold">
-              Rol Film Analog #01
+              Kapasitas Album (10.000 Foto)
             </span>
           </div>
           <div className="flex items-center gap-2">
             <div className="bg-primary/10 px-2.5 py-0.5 rounded-full flex items-center gap-1 border border-primary/20">
               <span className="font-label-sm text-label-sm text-primary font-bold">
-                {shotsRemaining} TERSISA
+                {shotsRemaining.toLocaleString()} TERSISA
               </span>
             </div>
           </div>
@@ -104,7 +104,7 @@ export const ReviewView: React.FC = () => {
 
         <div className="flex justify-between items-center mt-2.5 text-on-surface-variant font-mono">
           <span className="font-label-sm text-label-sm tracking-wide">
-            {takenCount} / {totalShotsLimit} EXPOSURES TERPAKAI
+            {takenCount.toLocaleString()} / {totalShotsLimit.toLocaleString()} FOTO TERPAKAI
           </span>
           <span className="font-label-sm text-label-sm text-secondary font-medium">
             {progressPercent}% Kapasitas

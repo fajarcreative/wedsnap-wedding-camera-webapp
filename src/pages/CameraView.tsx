@@ -159,7 +159,7 @@ export const CameraView: React.FC = () => {
   // Shutter action
   const handleShutter = async () => {
     if (shotsRemaining <= 0) {
-      showToast('warning', 'Rol film Anda telah habis (36/36 foto terpakai)! Silakan nikmati galeri bersama.', 'error');
+      showToast('warning', `Kapasitas foto Anda telah habis (${totalShotsLimit.toLocaleString()} foto terpakai)! Silakan nikmati galeri bersama.`, 'error');
       return;
     }
 
@@ -466,7 +466,7 @@ export const CameraView: React.FC = () => {
             <div className="flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-black/65 backdrop-blur-md border border-white/20 text-white shadow-lg">
               <span className="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
               <span className="font-label-sm text-label-sm font-mono text-[11px] font-bold text-primary-fixed">
-                {shotsRemaining} / {totalShotsLimit} Foto
+                {shotsRemaining.toLocaleString()} / {totalShotsLimit.toLocaleString()} Foto
               </span>
               <span className="text-white/40">•</span>
               <span className="font-label-sm text-label-sm font-mono text-[10px] text-white/90">
