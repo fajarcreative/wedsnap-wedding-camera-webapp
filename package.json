@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "deploy": "tsc && vite build && git checkout -B gh-pages && cp -r dist/* . && touch .nojekyll && cp index.html 404.html && git add -A && git commit -m 'deploy: update GitHub Pages build' && git push -f origin gh-pages && git checkout main"
   },
   "dependencies": {
     "canvas-confetti": "^1.9.4",
