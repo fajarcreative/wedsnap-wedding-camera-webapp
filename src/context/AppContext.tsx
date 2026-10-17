@@ -17,6 +17,7 @@ interface AppContextType {
   deletePhoto: (id: string) => void;
   retryUpload: (id: string) => void;
   toggleLike: (id: string) => void;
+  resetFilmRoll: () => void;
   eventSettings: EventSettings;
   updateSettings: (partial: Partial<EventSettings>) => void;
   toast: ToastMessage | null;
@@ -49,6 +50,16 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     return localStorage.getItem('wedsnap_empty_mode') === 'true';
   });
 
+  // Ensure fresh clean session for all new visitors or resets (Rule #12 & User Request)
+  if (typeof window !== 'undefined' && localStorage.getItem('wedsnap_v5_clean_slate') !== 'true') {
+    localStorage.removeItem('wedsnap_photos');
+    localStorage.removeItem('wedsnap_shots_remaining');
+    localStorage.removeItem('wedsnap_wishes');
+    localStorage.removeItem('wedsnap_settings');
+    localStorage.removeItem('wedsnap_empty_mode');
+    localStorage.setItem('wedsnap_v5_clean_slate', 'true');
+  }
+
   // Photos state
   const [photos, setPhotos] = useState<Photo[]>(() => {
     const saved = localStorage.getItem('wedsnap_photos');
@@ -62,10 +73,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     return initialPhotos;
   });
 
-  // Guest film exposures remaining
+  // Guest film exposures remaining (starts fresh with full 36 shots!)
   const [shotsRemaining, setShotsRemaining] = useState<number>(() => {
     const saved = localStorage.getItem('wedsnap_shots_remaining');
-    return saved ? parseInt(saved, 10) : 18;
+    return saved ? parseInt(saved, 10) : 36;
   });
 
   const totalShotsLimit = 36;
@@ -85,17 +96,26 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   const [guestWishInput, setGuestWishInput] = useState<string>('');
 
-  // Event settings
+  // Event settings - coupleNames, date, venue are immutable and strictly locked for all visitors
   const [eventSettings, setEventSettings] = useState<EventSettings>(() => {
     const saved = localStorage.getItem('wedsnap_settings');
+    let parsed: Partial<EventSettings> = {};
     if (saved) {
       try {
-        return JSON.parse(saved);
+        parsed = JSON.parse(saved);
       } catch (e) {
         console.error('Error parsing settings', e);
       }
     }
-    return initialEventSettings;
+    return {
+      ...initialEventSettings,
+      ...parsed,
+      title: 'Pernikahan Suci',
+      coupleNames: 'Fajar & Aulia',
+      date: '25 Oktober 2025',
+      venue: 'Sampoerna Strategic Square, Jakarta',
+      maxPerGuest: 36
+    };
   });
 
   // Guest Activities for live feed
@@ -106,6 +126,27 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [previewPhoto, setPreviewPhoto] = useState<Photo | null>(null);
   const [isSlideshowOpen, setIsSlideshowOpen] = useState(false);
   const [isTableQROpen, setIsTableQROpen] = useState(false);
+
+  // Reset film roll to fresh state (36 exposures, 0 user photos)
+  const resetFilmRoll = () => {
+    setShotsRemaining(36);
+    setPhotos(initialPhotos);
+    localStorage.setItem('wedsnap_shots_remaining', '36');
+    localStorage.setItem('wedsnap_photos', JSON.stringify(initialPhotos));
+    showToast('restart_alt', 'Rol film Anda telah di-reset (36 foto baru siap digunakan)!');
+  };
+
+  // Support ?reset=1 URL parameter for instant fresh start
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get('reset') === '1' || params.get('reset') === 'true') {
+        resetFilmRoll();
+        const newUrl = window.location.pathname + window.location.hash;
+        window.history.replaceState({}, '', newUrl);
+      }
+    }
+  }, []);
 
   // Sync route to window hash
   const navigateTo = (route: AppRoute) => {
@@ -140,7 +181,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     localStorage.setItem('wedsnap_wishes', JSON.stringify(wishes));
   }, [wishes]);
 
-  // Save settings
+  // Save settings (always ensuring coupleNames cannot be tampered)
   useEffect(() => {
     localStorage.setItem('wedsnap_settings', JSON.stringify(eventSettings));
   }, [eventSettings]);
@@ -165,7 +206,23 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   const updateSettings = (partial: Partial<EventSettings>) => {
     setEventSettings((prev) => {
-      const updated = { ...prev, ...partial };
+      // Disallow changing coupleNames, title, date, venue from visitors
+      const safePartial = { ...partial };
+      delete (safePartial as any).coupleNames;
+      delete (safePartial as any).title;
+      delete (safePartial as any).date;
+      delete (safePartial as any).venue;
+      delete (safePartial as any).maxPerGuest;
+
+      const updated = {
+        ...prev,
+        ...safePartial,
+        title: 'Pernikahan Suci',
+        coupleNames: 'Fajar & Aulia',
+        date: '25 Oktober 2025',
+        venue: 'Sampoerna Strategic Square, Jakarta',
+        maxPerGuest: 36
+      };
       showToast('tune', 'Pengaturan acara berhasil diperbarui');
       return updated;
     });
@@ -309,6 +366,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         deletePhoto,
         retryUpload,
         toggleLike,
+        resetFilmRoll,
         eventSettings,
         updateSettings,
         toast,

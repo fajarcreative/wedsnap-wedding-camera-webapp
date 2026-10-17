@@ -11,7 +11,8 @@ export const CameraView: React.FC = () => {
     retryUpload,
     navigateTo,
     eventSettings,
-    setPreviewPhoto
+    setPreviewPhoto,
+    showToast
   } = useApp();
 
   const [permissionError, setPermissionError] = useState<boolean>(false);
@@ -90,7 +91,7 @@ export const CameraView: React.FC = () => {
   // Shutter action
   const handleShutter = async () => {
     if (shotsRemaining <= 0) {
-      alert('Rol film Anda telah habis! Silakan nikmati galeri bersama.');
+      showToast('warning', 'Rol film Anda telah habis (36/36 foto terpakai)! Silakan nikmati galeri bersama.', 'error');
       return;
     }
 

@@ -11,6 +11,7 @@ export const ReviewView: React.FC = () => {
     setGuestWishInput,
     submitWish,
     retryUpload,
+    resetFilmRoll,
     setPreviewPhoto,
     navigateTo,
     eventSettings
@@ -59,10 +60,23 @@ export const ReviewView: React.FC = () => {
               Rol Film Analog #01
             </span>
           </div>
-          <div className="bg-primary/10 px-2.5 py-0.5 rounded-full flex items-center gap-1 border border-primary/20">
-            <span className="font-label-sm text-label-sm text-primary font-bold">
-              {shotsRemaining} TERSISA
-            </span>
+          <div className="flex items-center gap-2">
+            {takenCount > 0 && (
+              <button
+                onClick={resetFilmRoll}
+                className="bg-surface-container hover:bg-surface-container-high px-2 py-0.5 rounded-full flex items-center gap-1 border border-outline-variant/40 text-on-surface-variant hover:text-primary transition-colors active:scale-95 text-[10px] font-semibold"
+                title="Reset jatah foto kembali ke 36"
+                type="button"
+              >
+                <span className="material-symbols-outlined text-[13px]">restart_alt</span>
+                <span>Reset Rol</span>
+              </button>
+            )}
+            <div className="bg-primary/10 px-2.5 py-0.5 rounded-full flex items-center gap-1 border border-primary/20">
+              <span className="font-label-sm text-label-sm text-primary font-bold">
+                {shotsRemaining} TERSISA
+              </span>
+            </div>
           </div>
         </div>
 

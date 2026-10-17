@@ -16,8 +16,6 @@ export const DashboardView: React.FC = () => {
   } = useApp();
 
   const [isZipping, setIsZipping] = useState(false);
-  const [isEditingSettings, setIsEditingSettings] = useState(false);
-  const [editedSettings, setEditedSettings] = useState(eventSettings);
 
   const totalPhotosCount = photos.length;
   const capacityPercent = Math.min(
@@ -125,12 +123,6 @@ export const DashboardView: React.FC = () => {
     }
   };
 
-  const handleSaveSettings = (e: React.FormEvent) => {
-    e.preventDefault();
-    updateSettings(editedSettings);
-    setIsEditingSettings(false);
-  };
-
   return (
     <div className="flex flex-col w-full px-gutter pb-16 space-y-space-lg max-w-lg md:max-w-3xl lg:max-w-5xl mx-auto">
       {/* Prototype / Production Disclaimer Banner (Rule #12) */}
@@ -166,69 +158,14 @@ export const DashboardView: React.FC = () => {
             </span>
           </div>
 
-          <button
-            onClick={() => setIsEditingSettings(!isEditingSettings)}
-            className="p-1.5 rounded-full bg-surface-container-low text-on-surface-variant hover:text-primary transition-colors"
-            title="Pengaturan Acara"
-            type="button"
+          <div
+            className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-surface-container-low text-primary border border-outline-variant/30 text-[11px] font-semibold"
+            title="Identitas Acara Resmi & Terverifikasi"
           >
-            <span className="material-symbols-outlined text-[20px]">tune</span>
-          </button>
+            <span className="material-symbols-outlined text-[15px]">verified</span>
+            <span className="text-[10px] tracking-wider uppercase font-bold">Resmi</span>
+          </div>
         </div>
-
-        {/* Modal / Form Edit Settings */}
-        {isEditingSettings && (
-          <form
-            onSubmit={handleSaveSettings}
-            className="p-3 bg-surface-container-low rounded-xl flex flex-col gap-2.5 mt-2 border border-outline-variant/30 animate-fade-in"
-          >
-            <span className="font-label-md text-label-md font-semibold text-primary">
-              Ubah Informasi Acara
-            </span>
-            <input
-              type="text"
-              className="px-3 py-1.5 rounded-lg bg-surface border border-outline-variant/40 text-sm"
-              value={editedSettings.coupleNames}
-              onChange={(e) =>
-                setEditedSettings({ ...editedSettings, coupleNames: e.target.value })
-              }
-              placeholder="Nama Pasangan Pengantin"
-            />
-            <input
-              type="text"
-              className="px-3 py-1.5 rounded-lg bg-surface border border-outline-variant/40 text-sm"
-              value={editedSettings.date}
-              onChange={(e) =>
-                setEditedSettings({ ...editedSettings, date: e.target.value })
-              }
-              placeholder="Tanggal Pernikahan"
-            />
-            <input
-              type="text"
-              className="px-3 py-1.5 rounded-lg bg-surface border border-outline-variant/40 text-sm"
-              value={editedSettings.venue}
-              onChange={(e) =>
-                setEditedSettings({ ...editedSettings, venue: e.target.value })
-              }
-              placeholder="Lokasi Acara"
-            />
-            <div className="flex gap-2">
-              <button
-                type="submit"
-                className="flex-1 py-1 bg-primary text-on-primary rounded-lg text-xs font-semibold"
-              >
-                Simpan
-              </button>
-              <button
-                type="button"
-                onClick={() => setIsEditingSettings(false)}
-                className="py-1 px-3 bg-surface-container text-on-surface rounded-lg text-xs"
-              >
-                Batal
-              </button>
-            </div>
-          </form>
-        )}
 
         <div className="space-y-0.5">
           <h2 className="font-headline-md text-headline-md text-on-surface leading-tight text-[24px]">

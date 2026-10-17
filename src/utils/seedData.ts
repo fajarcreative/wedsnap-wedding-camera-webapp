@@ -26,7 +26,7 @@ export const initialPhotos: Photo[] = [
     status: 'saved',
     likes: 42,
     frameNumber: 1,
-    isUserPhoto: true
+    isUserPhoto: false
   },
   {
     id: 'photo-2',
@@ -41,7 +41,7 @@ export const initialPhotos: Photo[] = [
     status: 'uploading',
     likes: 89,
     frameNumber: 2,
-    isUserPhoto: true
+    isUserPhoto: false
   },
   {
     id: 'photo-3',
@@ -56,7 +56,7 @@ export const initialPhotos: Photo[] = [
     status: 'failed',
     likes: 28,
     frameNumber: 3,
-    isUserPhoto: true
+    isUserPhoto: false
   },
   {
     id: 'photo-4',
@@ -71,7 +71,7 @@ export const initialPhotos: Photo[] = [
     status: 'saved',
     likes: 56,
     frameNumber: 4,
-    isUserPhoto: true
+    isUserPhoto: false
   },
   {
     id: 'photo-5',
@@ -86,7 +86,7 @@ export const initialPhotos: Photo[] = [
     status: 'saved',
     likes: 71,
     frameNumber: 5,
-    isUserPhoto: true
+    isUserPhoto: false
   },
   {
     id: 'photo-6',
@@ -101,7 +101,7 @@ export const initialPhotos: Photo[] = [
     status: 'saved',
     likes: 19,
     frameNumber: 6,
-    isUserPhoto: true
+    isUserPhoto: false
   },
   {
     id: 'photo-7',
