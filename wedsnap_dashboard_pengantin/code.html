@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/><meta content="mobile_tab" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "secondary": "#735c00", "tertiary": "#695d46", "background": "#fbf9f6", "tertiary-container": "#b3a489", "surface-bright": "#fbf9f6", "on-primary": "#ffffff", "on-tertiary-container": "#443a25", "primary-container": "#c5a059", "secondary-container": "#fed65b", "on-error-container": "#93000a", "on-tertiary": "#ffffff", "on-tertiary-fixed-variant": "#504530", "primary-fixed-dim": "#e9c176", "error-container": "#ffdad6", "inverse-primary": "#e9c176", "on-surface-variant": "#4e4639", "surface-container-lowest": "#ffffff", "tertiary-fixed": "#f2e0c3", "surface-variant": "#e4e2df", "surface-container-low": "#f5f3f0", "surface-container-highest": "#e4e2df", "on-secondary-fixed-variant": "#574500", "on-primary-fixed-variant": "#5d4201", "on-secondary": "#ffffff", "error": "#ba1a1a", "tertiary-fixed-dim": "#d5c5a8", "outline": "#7f7667", "inverse-surface": "#30312f", "secondary-fixed": "#ffe088", "primary": "#775a19", "surface": "#fbf9f6", "on-secondary-fixed": "#241a00", "surface-container": "#efeeeb", "surface-dim": "#dbdad7", "outline-variant": "#d1c5b4", "surface-container-high": "#eae8e5", "on-error": "#ffffff", "inverse-on-surface": "#f2f0ed", "on-surface": "#1b1c1a", "primary-fixed": "#ffdea5", "secondary-fixed-dim": "#e9c349", "on-tertiary-fixed": "#231a08", "surface-tint": "#775a19", "on-primary-container": "#4e3700", "on-secondary-container": "#745c00", "on-primary-fixed": "#261900", "on-background": "#1b1c1a" }, "borderRadius": { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, "spacing": { "space-xs": "0.25rem", "space-md": "1rem", "gutter-desktop": "2rem", "space-xl": "2.5rem", "space-sm": "0.5rem", "margin-desktop": "3rem", "gutter": "1.25rem", "space-lg": "1.5rem", "margin": "1.25rem" }, "fontFamily": { "body-md": ["Plus Jakarta Sans"], "body-lg": ["Plus Jakarta Sans"], "headline-lg": ["Playfair Display"], "display-lg-mobile": ["Playfair Display"], "label-md": ["Plus Jakarta Sans"], "label-lg": ["Plus Jakarta Sans"], "headline-sm": ["Playfair Display"], "display-lg": ["Playfair Display"], "headline-md": ["Playfair Display"], "headline-lg-mobile": ["Playfair Display"], "body-sm": ["Plus Jakarta Sans"], "label-sm": ["Plus Jakarta Sans"] }, "fontSize": { "body-md": ["15px", { "lineHeight": "24px", "letterSpacing": "0em", "fontWeight": "400" }], "body-lg": ["18px", { "lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "400" }], "headline-lg": ["40px", { "lineHeight": "48px", "letterSpacing": "-0.01em", "fontWeight": "400" }], "display-lg-mobile": ["36px", { "lineHeight": "44px", "letterSpacing": "-0.01em", "fontWeight": "400" }], "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.06em", "fontWeight": "600" }], "label-lg": ["14px", { "lineHeight": "20px", "letterSpacing": "0.04em", "fontWeight": "600" }], "headline-sm": ["22px", { "lineHeight": "28px", "letterSpacing": "0.01em", "fontWeight": "500" }], "display-lg": ["56px", { "lineHeight": "64px", "letterSpacing": "-0.02em", "fontWeight": "400" }], "headline-md": ["28px", { "lineHeight": "36px", "letterSpacing": "0em", "fontWeight": "500" }], "headline-lg-mobile": ["28px", { "lineHeight": "36px", "letterSpacing": "0em", "fontWeight": "400" }], "body-sm": ["13px", { "lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "400" }], "label-sm": ["10px", { "lineHeight": "14px", "letterSpacing": "0.1em", "fontWeight": "700" }] } } } }</script><style>@layer base{html,body{width:100%;margin:0;padding:0;}body{overscroll-behavior-y:none;-webkit-tap-highlight-color:transparent;}.pb-safe{padding-bottom:env(safe-area-inset-bottom,0px);}.pt-safe{padding-top:env(safe-area-inset-top,0px);}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style></head><body class="bg-surface font-body-md text-body-md text-on-surface antialiased min-h-screen flex flex-col selection:bg-primary-fixed selection:text-on-primary-fixed"><header class="fixed top-0 inset-x-0 z-50 bg-surface/85 backdrop-blur-xl shadow-[0_1px_12px_rgba(119,90,25,0.05)] pt-safe"><div class="h-16 px-gutter flex items-center justify-between gap-space-sm"><div class="flex items-center gap-space-sm min-w-0"><img alt="WedSnap Logo" class="h-8 w-auto object-contain flex-shrink-0" src="https://lh3.googleusercontent.com/aida/AEtjO1UJalQuhiXFKyA-IOcJZiU_W1P76cqdk31OUixri5eDF6PYPBpIFi2Tcozy1jWjNA0-3z0Rc1gfN9oTFcmAGD6YrCPmPr8biaBRXnkcmGg1toed6LF_kUnoPwPSB7cBMS9U_lAoL3bTu0zuEu9en93LVBeDFSbVlaN6IWX5wElehOtmSiWfWxMlKHHUSaOW-VLzt8VgjzQEaSMPzAT9QLSy9cgCXs3_HMUwFUUEghGOzBKaKgtQO9IpQP8"/><div class="flex flex-col min-w-0"><span class="font-label-sm text-label-sm uppercase tracking-widest text-primary">WedSnap</span><h1 class="font-headline-sm text-headline-sm text-on-surface truncate leading-tight tracking-normal">Dashboard Pengantin</h1></div></div><div class="flex items-center gap-space-sm flex-shrink-0"><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center shadow-sm"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main class="flex-1 flex flex-col relative w-full pt-16 pb-28 bg-surface"><div class="flex flex-col w-full px-gutter space-y-space-lg">
+<!-- Subtle Prototype Disclaimer Banner -->
+<div class="flex items-center justify-between bg-surface-container-low px-space-md py-space-xs rounded-xl">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-primary text-[18px]">info</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Data pratinjau desain interaktif.</p>
+</div>
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-primary font-semibold">Demo WO</span>
+</div>
+<!-- Event Header & Live Badge -->
+<section class="flex flex-col space-y-space-sm bg-surface-container-lowest p-space-lg rounded-xl shadow-[0_4px_20px_-2px_rgba(197,160,89,0.08)]">
+<div class="flex items-center justify-between">
+<div class="inline-flex items-center gap-space-xs px-2.5 py-1 rounded-full bg-secondary-container/30 text-on-secondary-container">
+<span class="relative flex h-2 w-2">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-secondary opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2 w-2 bg-secondary"></span>
+</span>
+<span class="font-label-sm text-label-sm uppercase tracking-wider font-semibold">Acara Sedang Berlangsung (Live)</span>
+</div>
+<button class="p-1.5 rounded-full bg-surface-container-low text-on-surface-variant hover:text-primary transition-colors" title="Pengaturan Acara" type="button">
+<span class="material-symbols-outlined text-[20px]">tune</span>
+</button>
+</div>
+<div class="space-y-0.5">
+<h2 class="font-headline-md text-headline-md text-on-surface leading-tight">Fajar &amp; Aulia Wedding</h2>
+<div class="flex items-center gap-1.5 text-on-surface-variant">
+<span class="material-symbols-outlined text-[16px] text-primary">calendar_today</span>
+<p class="font-body-sm text-body-sm">25 Oktober 2025</p>
+<span class="text-tertiary-container">•</span>
+<span class="material-symbols-outlined text-[16px] text-primary">location_on</span>
+<p class="font-body-sm text-body-sm truncate">Sampoerna Strategic Square</p>
+</div>
+</div>
+<!-- Quick Stat Bar -->
+<div class="pt-2">
+<div class="flex justify-between items-center mb-1.5">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Kapasitas Album Resepsi</span>
+<span class="font-label-sm text-label-sm font-semibold text-primary">342 / 1.000 Foto (34%)</span>
+</div>
+<div class="w-full h-2 rounded-full bg-surface-container overflow-hidden">
+<div class="h-full bg-primary-container rounded-full" style="width: 34.2%"></div>
+</div>
+</div>
+</section>
+<!-- KPI Bento Grid -->
+<section class="grid grid-cols-2 gap-space-sm">
+<!-- KPI 1 -->
+<div class="bg-surface-container-lowest p-space-md rounded-xl shadow-sm flex flex-col justify-between">
+<div class="flex items-center justify-between">
+<div class="w-8 h-8 rounded-lg bg-primary-fixed/40 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[20px]">photo_library</span>
+</div>
+<span class="font-label-sm text-label-sm text-secondary font-semibold">+24/jam</span>
+</div>
+<div class="mt-3">
+<span class="font-headline-sm text-headline-sm text-on-surface block leading-tight font-semibold">342</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Foto Terkumpul</span>
+</div>
+</div>
+<!-- KPI 2 -->
+<div class="bg-surface-container-lowest p-space-md rounded-xl shadow-sm flex flex-col justify-between">
+<div class="flex items-center justify-between">
+<div class="w-8 h-8 rounded-lg bg-secondary-fixed/50 flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined text-[20px]">group</span>
+</div>
+<span class="inline-flex items-center gap-1 font-label-sm text-label-sm text-secondary font-semibold">
+<span class="h-1.5 w-1.5 rounded-full bg-secondary"></span> Aktif
+        </span>
+</div>
+<div class="mt-3">
+<span class="font-headline-sm text-headline-sm text-on-surface block leading-tight font-semibold">48 Sesi</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Kamera Tamu</span>
+</div>
+</div>
+<!-- KPI 3 -->
+<div class="bg-surface-container-lowest p-space-md rounded-xl shadow-sm flex flex-col justify-between">
+<div class="flex items-center justify-between">
+<div class="w-8 h-8 rounded-lg bg-tertiary-fixed flex items-center justify-center text-tertiary">
+<span class="material-symbols-outlined text-[20px]">cloud_done</span>
+</div>
+<span class="font-label-sm text-label-sm text-primary font-semibold">Optimal</span>
+</div>
+<div class="mt-3">
+<span class="font-headline-sm text-headline-sm text-on-surface block leading-tight font-semibold">99.4%</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Keberhasilan Unggah</span>
+</div>
+</div>
+<!-- KPI 4 -->
+<div class="bg-surface-container-lowest p-space-md rounded-xl shadow-sm flex flex-col justify-between">
+<div class="flex items-center justify-between">
+<div class="w-8 h-8 rounded-lg bg-surface-container flex items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined text-[20px]">database</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant">10 GB Kuota</span>
+</div>
+<div class="mt-3">
+<span class="font-headline-sm text-headline-sm text-on-surface block leading-tight font-semibold">1.4 GB</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Penyimpanan Terpakai</span>
+</div>
+</div>
+</section>
+<!-- Quick Action Buttons for Bride & Groom / WO -->
+<section class="space-y-space-sm">
+<div class="flex items-center justify-between">
+<h3 class="font-label-lg text-label-lg text-on-surface tracking-wider uppercase">Aksi Cepat Acara</h3>
+<span class="font-label-sm text-label-sm text-primary">3 Menu Siap</span>
+</div>
+<div class="grid grid-cols-1 gap-2.5">
+<!-- Slideshow Action -->
+<button class="w-full flex items-center justify-between bg-primary text-on-primary px-space-md py-3 rounded-lg shadow-md hover:bg-primary/95 active:scale-[0.99] transition-all" type="button">
+<div class="flex items-center gap-space-sm">
+<div class="w-9 h-9 rounded-full bg-on-primary/15 flex items-center justify-center">
+<span class="material-symbols-outlined text-[20px]">slideshow</span>
+</div>
+<div class="text-left">
+<span class="font-label-lg text-label-lg block leading-none font-semibold">Tayangkan Slideshow Resepsi</span>
+<span class="font-body-sm text-body-sm text-primary-fixed opacity-90">Koneksikan ke layar LED proyektor</span>
+</div>
+</div>
+<span class="material-symbols-outlined text-[20px]">open_in_new</span>
+</button>
+<!-- Download Action -->
+<button class="w-full flex items-center justify-between bg-surface-container-lowest text-on-surface px-space-md py-3 rounded-lg shadow-sm hover:bg-surface-container-low transition-colors" type="button">
+<div class="flex items-center gap-space-sm">
+<div class="w-9 h-9 rounded-full bg-secondary-fixed/40 text-secondary flex items-center justify-center">
+<span class="material-symbols-outlined text-[20px]">folder_zip</span>
+</div>
+<div class="text-left">
+<span class="font-label-lg text-label-lg block leading-none font-semibold">Unduh Semua Foto (ZIP)</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Resolusi tinggi original (1.4 GB)</span>
+</div>
+</div>
+<span class="material-symbols-outlined text-[20px] text-primary">download</span>
+</button>
+<!-- Share Guest Link -->
+<button class="w-full flex items-center justify-between bg-surface-container-lowest text-on-surface px-space-md py-3 rounded-lg shadow-sm hover:bg-surface-container-low transition-colors" id="btnShareGuestLink" type="button">
+<div class="flex items-center gap-space-sm">
+<div class="w-9 h-9 rounded-full bg-primary-fixed/40 text-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-[20px]">share</span>
+</div>
+<div class="text-left">
+<span class="font-label-lg text-label-lg block leading-none font-semibold">Bagikan Link Kamera Tamu</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Tautan langsung tanpa instal aplikasi</span>
+</div>
+</div>
+<span class="material-symbols-outlined text-[20px] text-primary">send</span>
+</button>
+</div>
+</section>
+<!-- Guest Table QR Code Management Card -->
+<section class="bg-surface-container-lowest p-space-lg rounded-xl shadow-[0_4px_20px_-2px_rgba(197,160,89,0.08)] space-y-space-md">
+<div class="flex items-center justify-between">
+<div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">QR Code Meja Tamu</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Akses instan disposable camera untuk tamu undangan</p>
+</div>
+<span class="material-symbols-outlined text-primary text-[28px]">qr_code_scanner</span>
+</div>
+<!-- QR Visual Card with Champagne Botanical Framing -->
+<div class="bg-surface-container-low p-space-lg rounded-xl flex flex-col items-center text-center relative overflow-hidden shadow-sm">
+<!-- Decorative background glow -->
+<div class="absolute -top-12 -right-12 w-36 h-36 rounded-full bg-primary-fixed/30 blur-2xl pointer-events-none"></div>
+<div class="absolute -bottom-12 -left-12 w-36 h-36 rounded-full bg-secondary-fixed/30 blur-2xl pointer-events-none"></div>
+<!-- Ornamental Monogram Tag -->
+<div class="mb-3 px-3 py-0.5 rounded-full bg-surface-container-lowest shadow-sm flex items-center gap-1.5">
+<span class="material-symbols-outlined text-primary text-[14px]">local_florist</span>
+<span class="font-label-sm text-label-sm text-on-surface uppercase tracking-widest">Meja VIP &amp; Reguler</span>
+</div>
+<!-- QR Code Art Display -->
+<div class="w-44 h-44 bg-surface-container-lowest p-3 rounded-xl shadow-md flex items-center justify-center relative">
+<svg class="w-full h-full text-on-surface" fill="currentColor" viewbox="0 0 160 160">
+<!-- Stylized High-End QR Visual -->
+<!-- Top Left Marker -->
+<rect fill="#775a19" height="40" rx="6" width="40" x="10" y="10"></rect>
+<rect fill="#fbf9f6" height="24" rx="3" width="24" x="18" y="18"></rect>
+<rect fill="#775a19" height="12" rx="2" width="12" x="24" y="24"></rect>
+<!-- Top Right Marker -->
+<rect fill="#775a19" height="40" rx="6" width="40" x="110" y="10"></rect>
+<rect fill="#fbf9f6" height="24" rx="3" width="24" x="118" y="18"></rect>
+<rect fill="#775a19" height="12" rx="2" width="12" x="124" y="24"></rect>
+<!-- Bottom Left Marker -->
+<rect fill="#775a19" height="40" rx="6" width="40" x="10" y="110"></rect>
+<rect fill="#fbf9f6" height="24" rx="3" width="24" x="18" y="118"></rect>
+<rect fill="#775a19" height="12" rx="2" width="12" x="24" y="124"></rect>
+<!-- Data Dot Matrix Pattern -->
+<circle cx="65" cy="20" fill="#4e4639" r="4"></circle>
+<circle cx="80" cy="20" fill="#c5a059" r="4"></circle>
+<circle cx="95" cy="20" fill="#4e4639" r="4"></circle>
+<circle cx="65" cy="35" fill="#c5a059" r="4"></circle>
+<circle cx="80" cy="35" fill="#4e4639" r="4"></circle>
+<circle cx="65" cy="50" fill="#4e4639" r="4"></circle>
+<circle cx="95" cy="50" fill="#c5a059" r="4"></circle>
+<!-- Center Heart/Camera Symbol Accent -->
+<circle cx="80" cy="80" fill="#fbf9f6" r="16"></circle>
+<circle cx="80" cy="80" fill="#fed65b" r="13"></circle>
+<path d="M80 87.5s-6-3.8-6-7.5c0-2 1.5-3.5 3.5-3.5 1.3 0 2.2.8 2.5 1.3.3-.5 1.2-1.3 2.5-1.3 2 0 3.5 1.5 3.5 3.5 0 3.7-6 7.5-6 7.5z" fill="#745c00"></path>
+<!-- Lower grid elements -->
+<circle cx="65" cy="110" fill="#4e4639" r="4"></circle>
+<circle cx="80" cy="110" fill="#c5a059" r="4"></circle>
+<circle cx="95" cy="110" fill="#4e4639" r="4"></circle>
+<circle cx="110" cy="70" fill="#4e4639" r="4"></circle>
+<circle cx="125" cy="70" fill="#c5a059" r="4"></circle>
+<circle cx="140" cy="70" fill="#4e4639" r="4"></circle>
+<circle cx="110" cy="90" fill="#c5a059" r="4"></circle>
+<circle cx="125" cy="90" fill="#4e4639" r="4"></circle>
+<circle cx="140" cy="90" fill="#4e4639" r="4"></circle>
+<circle cx="125" cy="125" fill="#775a19" r="4"></circle>
+<circle cx="140" cy="140" fill="#c5a059" r="4"></circle>
+<circle cx="70" cy="135" fill="#4e4639" r="4"></circle>
+<circle cx="90" cy="135" fill="#775a19" r="4"></circle>
+</svg>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-3 max-w-xs">
+        Scan kamera ponsel langsung terbuka di browser tamu. Tanpa registrasi akun.
+      </p>
+<div class="mt-2 text-primary font-body-sm text-body-sm font-semibold tracking-wide">
+        wedsnap.id/fajar-aulia
+      </div>
+</div>
+<!-- QR Code Action Buttons -->
+<div class="grid grid-cols-2 gap-space-sm pt-1">
+<button class="w-full flex items-center justify-center gap-1.5 bg-primary-container text-on-primary-container px-3 py-2.5 rounded-lg font-label-md text-label-md uppercase tracking-wider font-semibold active:opacity-90 transition-opacity" type="button">
+<span class="material-symbols-outlined text-[18px]">print</span>
+<span>Cetak Meja</span>
+</button>
+<button class="w-full flex items-center justify-center gap-1.5 bg-surface-container text-on-surface-variant hover:text-on-surface px-3 py-2.5 rounded-lg font-label-md text-label-md uppercase tracking-wider font-semibold active:bg-surface-container-high transition-colors" id="btnCopyGuestUrl" type="button">
+<span class="material-symbols-outlined text-[18px]" id="copyIcon">content_copy</span>
+<span id="copyText">Salin URL</span>
+</button>
+</div>
+</section>
+<!-- Real-Time Guest Activity Feed -->
+<section class="space-y-space-sm">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-1.5">
+<h3 class="font-label-lg text-label-lg text-on-surface tracking-wider uppercase">Aktivitas Unggahan</h3>
+<span class="px-2 py-0.5 rounded-full bg-secondary-container/40 text-on-secondary-container font-label-sm text-label-sm font-semibold">Live</span>
+</div>
+<a class="font-label-sm text-label-sm text-primary font-semibold hover:underline" href="#">Lihat Semua</a>
+</div>
+<div class="space-y-2">
+<!-- Activity Item 1 -->
+<div class="flex items-center justify-between p-space-sm bg-surface-container-lowest rounded-xl shadow-sm">
+<div class="flex items-center gap-3 min-w-0">
+<div class="w-10 h-10 rounded-full bg-primary-fixed/50 flex items-center justify-center text-primary font-semibold text-body-sm flex-shrink-0">
+            DR
+          </div>
+<div class="min-w-0">
+<p class="font-body-md text-body-md font-semibold text-on-surface truncate">Dinda &amp; Rian</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant flex items-center gap-1">
+<span>Meja VIP 03</span>
+<span class="text-tertiary-container">•</span>
+<span>Baru saja</span>
+</p>
+</div>
+</div>
+<div class="w-12 h-12 rounded-lg bg-surface-container overflow-hidden flex-shrink-0 relative">
+<img class="w-full h-full object-cover" data-alt="Warm intimate flash photograph of wedding guests toasting champagne flutes with golden celebratory bokeh in luxury ballroom" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC2rOEQ1mxaY5K5WUYuqEVQ4kSJRHyC0QL78aBrCHP8McjOC5IlNbrAAst3biyAveSKZQGfveqHM18hf806P0w6HabRZbDZYU8NO9MHHjf1DDqSmLPY2phXSOwVN5slhrtce8w_ixHeCJOATiRW-p1iLsw89shXSiVQJxSPPrc-xfi368awecY31onA0T8UG5aM7okm5QLIfexMJ8TyfKvdIOOm4OrI_KqsxfPv4H7IHjkLJxTBbV_Bjg"/>
+<div class="absolute bottom-0 right-0 bg-primary/80 text-on-primary text-[10px] px-1 rounded-tl font-bold">+2</div>
+</div>
+</div>
+<!-- Activity Item 2 -->
+<div class="flex items-center justify-between p-space-sm bg-surface-container-lowest rounded-xl shadow-sm">
+<div class="flex items-center gap-3 min-w-0">
+<div class="w-10 h-10 rounded-full bg-secondary-fixed/50 flex items-center justify-center text-secondary font-semibold text-body-sm flex-shrink-0">
+            BA
+          </div>
+<div class="min-w-0">
+<p class="font-body-md text-body-md font-semibold text-on-surface truncate">Bagas Arya</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant flex items-center gap-1">
+<span>Meja Sahabat SMA</span>
+<span class="text-tertiary-container">•</span>
+<span>3 mnt lalu</span>
+</p>
+</div>
+</div>
+<div class="w-12 h-12 rounded-lg bg-surface-container overflow-hidden flex-shrink-0">
+<img class="w-full h-full object-cover" data-alt="Candid disposable film photo aesthetic of bride laughing joyfully while holding delicate floral bouquet with champagne satin dress" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA2vnE5r_RmsP0_r-efFSkvi0WtHFlLGLsssfXfZtgYuaBlUdB_ikAtzSNgxUynj2syBMm4TvST9iHz5vQe5KkQCR41P41kB4HH0OGHAoMfqo7x__M1wONrHXB1odB6ZGJjIycBYZq6-SjkSQy2WmPQr8GFHbqS8hyX9Wy977SDxWyty3kM0vJqDQYIu3f20b6hkmjsRjlTAR86j-MhoZImpEaupXtC2eBIiBGQDirYCt2UDvqnp-TuTg"/>
+</div>
+</div>
+<!-- Activity Item 3 -->
+<div class="flex items-center justify-between p-space-sm bg-surface-container-lowest rounded-xl shadow-sm">
+<div class="flex items-center gap-3 min-w-0">
+<div class="w-10 h-10 rounded-full bg-tertiary-fixed flex items-center justify-center text-tertiary font-semibold text-body-sm flex-shrink-0">
+            TW
+          </div>
+<div class="min-w-0">
+<p class="font-body-md text-body-md font-semibold text-on-surface truncate">Tante Widya &amp; Om Eko</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant flex items-center gap-1">
+<span>Meja Keluarga Besar</span>
+<span class="text-tertiary-container">•</span>
+<span>8 mnt lalu</span>
+</p>
+</div>
+</div>
+<div class="w-12 h-12 rounded-lg bg-surface-container overflow-hidden flex-shrink-0">
+<img class="w-full h-full object-cover" data-alt="Warm nostalgic family group portrait smiling warmly at wedding reception stage with warm amber uplighting and ivory floral decorations" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCEPRAxuILCiiA1IzpsHz2SXVmiDebFxj5pmGgAxz2PiJH-LX86qI4qjnu8NeqIxhJEyaHY4xl0R8PBL6fzeV1Y0IGqiGoIfXRuXw6I3PYyoePAJHemUNme4TN_poCH8BzXa24-_me_TPXTLXOyRz82KPt4kLjSOTcJUBXa9wQKLToHDXCDzu-8cWF294bfczVUkVH5spbKvILOK9HVy61F_NaIMKO-O-UUL_0ktmomW0paQeYv7Zsk4Q"/>
+</div>
+</div>
+</div>
+</section>
+<!-- Event Controls & Privacy Restrictions -->
+<section class="bg-surface-container-lowest p-space-lg rounded-xl shadow-[0_4px_20px_-2px_rgba(197,160,89,0.08)] space-y-space-md mb-space-lg">
+<div class="space-y-0.5">
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Batasan &amp; Moderasi</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Kendali privasi dan kenyamanan foto momen sakral</p>
+</div>
+<div class="space-y-4">
+<!-- Setting 1: Moderation -->
+<div class="flex items-center justify-between gap-space-sm">
+<div class="space-y-0.5 pr-2">
+<span class="font-label-lg text-label-lg font-semibold text-on-surface block">Moderasi Foto Otomatis</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant block">Saring foto blur &amp; konten tidak pantas sebelum masuk tayangan proyektor</span>
+</div>
+<label class="relative inline-flex items-center cursor-pointer flex-shrink-0">
+<input checked="" class="sr-only peer" id="toggleModeration" type="checkbox"/>
+<div class="w-11 h-6 bg-surface-container peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-surface-container-lowest after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+</label>
+</div>
+<!-- Setting 2: Guest Photo Limit -->
+<div class="flex items-center justify-between gap-space-sm">
+<div class="space-y-0.5 pr-2">
+<span class="font-label-lg text-label-lg font-semibold text-on-surface block">Batasi 36 Foto / Tamu</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant block">Sensasi rol film analog sekali pakai agar setiap potret terasa berharga</span>
+</div>
+<label class="relative inline-flex items-center cursor-pointer flex-shrink-0">
+<input checked="" class="sr-only peer" id="toggleFilmLimit" type="checkbox"/>
+<div class="w-11 h-6 bg-surface-container peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-surface-container-lowest after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+</label>
+</div>
+<!-- Setting 3: Live Gallery Visibility -->
+<div class="flex items-center justify-between gap-space-sm">
+<div class="space-y-0.5 pr-2">
+<span class="font-label-lg text-label-lg font-semibold text-on-surface block">Privasi Galeri Tamu</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant block">Tamu hanya dapat melihat foto yang diunggah mereka sendiri</span>
+</div>
+<label class="relative inline-flex items-center cursor-pointer flex-shrink-0">
+<input class="sr-only peer" id="togglePrivacy" type="checkbox"/>
+<div class="w-11 h-6 bg-surface-container peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-surface-container-lowest after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+</label>
+</div>
+</div>
+</section>
+<!-- Interactive Toast Notification -->
+<div class="fixed bottom-24 left-1/2 -translate-x-1/2 bg-inverse-surface text-inverse-on-surface px-4 py-2.5 rounded-full shadow-xl flex items-center gap-2 opacity-0 pointer-events-none transition-all duration-300 z-50" id="toastNotification">
+<span class="material-symbols-outlined text-[18px] text-primary-fixed">check_circle</span>
+<span class="font-body-sm text-body-sm font-medium" id="toastMessage">Tautan berhasil disalin</span>
+</div>
+</div>
+<script>
+  (function() {
+    const btnCopy = document.getElementById('btnCopyGuestUrl');
+    const btnShare = document.getElementById('btnShareGuestLink');
+    const toast = document.getElementById('toastNotification');
+    const toastMsg = document.getElementById('toastMessage');
+    const copyText = document.getElementById('copyText');
+    const copyIcon = document.getElementById('copyIcon');
+
+    function showToast(message) {
+      if (!toast) return;
+      toastMsg.textContent = message;
+      toast.classList.remove('opacity-0', 'pointer-events-none');
+      toast.classList.add('opacity-100');
+      setTimeout(() => {
+        toast.classList.remove('opacity-100');
+        toast.classList.add('opacity-0', 'pointer-events-none');
+      }, 2400);
+    }
+
+    if (btnCopy) {
+      btnCopy.addEventListener('click', () => {
+        navigator.clipboard?.writeText('https://wedsnap.id/fajar-aulia').catch(() => {});
+        copyText.textContent = 'Tersalin!';
+        copyIcon.textContent = 'done';
+        showToast('Link QR kamera tersalin ke clipboard');
+        setTimeout(() => {
+          copyText.textContent = 'Salin URL';
+          copyIcon.textContent = 'content_copy';
+        }, 2000);
+      });
+    }
+
+    if (btnShare) {
+      btnShare.addEventListener('click', () => {
+        if (navigator.share) {
+          navigator.share({
+            title: 'WedSnap - Fajar & Aulia Wedding',
+            text: 'Ayo foto momen resepsi Fajar & Aulia bersama!',
+            url: 'https://wedsnap.id/fajar-aulia'
+          }).catch(() => {});
+        } else {
+          navigator.clipboard?.writeText('https://wedsnap.id/fajar-aulia').catch(() => {});
+          showToast('Tautan kamera tamu siap dibagikan ke WhatsApp');
+        }
+      });
+    }
+  })();
+</script></main><nav class="fixed bottom-0 inset-x-0 z-50 pb-safe bg-surface/90 backdrop-blur-2xl shadow-[0_-4px_24px_rgba(119,90,25,0.06)]" data-active-classes="text-primary font-semibold"><div class="flex justify-around items-center h-20 px-space-xs max-w-lg mx-auto"><a class="flex flex-col items-center justify-center min-w-[64px] min-h-[44px] py-1 text-on-surface-variant transition-colors hover:text-on-surface" data-path="camera-view" href="#"><span class="material-symbols-outlined text-[24px]">photo_camera</span><span class="font-label-sm text-label-sm mt-0.5 tracking-tight">Kamera</span></a><a class="flex flex-col items-center justify-center min-w-[64px] min-h-[44px] py-1 text-on-surface-variant transition-colors hover:text-on-surface" data-path="review-foto" href="#"><span class="material-symbols-outlined text-[24px]">camera_roll</span><span class="font-label-sm text-label-sm mt-0.5 tracking-tight">Review</span></a><a class="flex flex-col items-center justify-center min-w-[64px] min-h-[44px] py-1 text-on-surface-variant transition-colors hover:text-on-surface" data-path="galeri-bersama" href="#"><span class="material-symbols-outlined text-[24px]">photo_library</span><span class="font-label-sm text-label-sm mt-0.5 tracking-tight">Galeri</span></a><a aria-current="page" class="flex flex-col items-center justify-center min-w-[64px] min-h-[44px] py-1 transition-colors text-primary font-semibold" data-path="dashboard-pengantin" href="#"><span class="material-symbols-outlined text-[24px]">favorite</span><span class="font-label-sm text-label-sm mt-0.5 tracking-tight">Pengantin</span></a></div></nav></body></html>

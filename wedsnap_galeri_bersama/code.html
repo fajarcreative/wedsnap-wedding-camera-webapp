@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/><meta content="mobile_tab" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "secondary": "#735c00", "tertiary": "#695d46", "background": "#fbf9f6", "tertiary-container": "#b3a489", "surface-bright": "#fbf9f6", "on-primary": "#ffffff", "on-tertiary-container": "#443a25", "primary-container": "#c5a059", "secondary-container": "#fed65b", "on-error-container": "#93000a", "on-tertiary": "#ffffff", "on-tertiary-fixed-variant": "#504530", "primary-fixed-dim": "#e9c176", "error-container": "#ffdad6", "inverse-primary": "#e9c176", "on-surface-variant": "#4e4639", "surface-container-lowest": "#ffffff", "tertiary-fixed": "#f2e0c3", "surface-variant": "#e4e2df", "surface-container-low": "#f5f3f0", "surface-container-highest": "#e4e2df", "on-secondary-fixed-variant": "#574500", "on-primary-fixed-variant": "#5d4201", "on-secondary": "#ffffff", "error": "#ba1a1a", "tertiary-fixed-dim": "#d5c5a8", "outline": "#7f7667", "inverse-surface": "#30312f", "secondary-fixed": "#ffe088", "primary": "#775a19", "surface": "#fbf9f6", "on-secondary-fixed": "#241a00", "surface-container": "#efeeeb", "surface-dim": "#dbdad7", "outline-variant": "#d1c5b4", "surface-container-high": "#eae8e5", "on-error": "#ffffff", "inverse-on-surface": "#f2f0ed", "on-surface": "#1b1c1a", "primary-fixed": "#ffdea5", "secondary-fixed-dim": "#e9c349", "on-tertiary-fixed": "#231a08", "surface-tint": "#775a19", "on-primary-container": "#4e3700", "on-secondary-container": "#745c00", "on-primary-fixed": "#261900", "on-background": "#1b1c1a" }, "borderRadius": { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, "spacing": { "space-xs": "0.25rem", "space-md": "1rem", "gutter-desktop": "2rem", "space-xl": "2.5rem", "space-sm": "0.5rem", "margin-desktop": "3rem", "gutter": "1.25rem", "space-lg": "1.5rem", "margin": "1.25rem" }, "fontFamily": { "body-md": ["Plus Jakarta Sans"], "body-lg": ["Plus Jakarta Sans"], "headline-lg": ["Playfair Display"], "display-lg-mobile": ["Playfair Display"], "label-md": ["Plus Jakarta Sans"], "label-lg": ["Plus Jakarta Sans"], "headline-sm": ["Playfair Display"], "display-lg": ["Playfair Display"], "headline-md": ["Playfair Display"], "headline-lg-mobile": ["Playfair Display"], "body-sm": ["Plus Jakarta Sans"], "label-sm": ["Plus Jakarta Sans"] }, "fontSize": { "body-md": ["15px", { "lineHeight": "24px", "letterSpacing": "0em", "fontWeight": "400" }], "body-lg": ["18px", { "lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "400" }], "headline-lg": ["40px", { "lineHeight": "48px", "letterSpacing": "-0.01em", "fontWeight": "400" }], "display-lg-mobile": ["36px", { "lineHeight": "44px", "letterSpacing": "-0.01em", "fontWeight": "400" }], "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.06em", "fontWeight": "600" }], "label-lg": ["14px", { "lineHeight": "20px", "letterSpacing": "0.04em", "fontWeight": "600" }], "headline-sm": ["22px", { "lineHeight": "28px", "letterSpacing": "0.01em", "fontWeight": "500" }], "display-lg": ["56px", { "lineHeight": "64px", "letterSpacing": "-0.02em", "fontWeight": "400" }], "headline-md": ["28px", { "lineHeight": "36px", "letterSpacing": "0em", "fontWeight": "500" }], "headline-lg-mobile": ["28px", { "lineHeight": "36px", "letterSpacing": "0em", "fontWeight": "400" }], "body-sm": ["13px", { "lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "400" }], "label-sm": ["10px", { "lineHeight": "14px", "letterSpacing": "0.1em", "fontWeight": "700" }] } } } }</script><style>@layer base{html,body{width:100%;margin:0;padding:0;}body{overscroll-behavior-y:none;-webkit-tap-highlight-color:transparent;}.pb-safe{padding-bottom:env(safe-area-inset-bottom,0px);}.pt-safe{padding-top:env(safe-area-inset-top,0px);}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style></head><body class="bg-surface font-body-md text-body-md text-on-surface antialiased min-h-screen flex flex-col selection:bg-primary-fixed selection:text-on-primary-fixed"><header class="fixed top-0 inset-x-0 z-50 bg-surface/85 backdrop-blur-xl shadow-[0_1px_12px_rgba(119,90,25,0.05)] pt-safe"><div class="h-16 px-gutter flex items-center justify-between gap-space-sm"><div class="flex items-center gap-space-sm min-w-0"><img alt="WedSnap Logo" class="h-8 w-auto object-contain flex-shrink-0" src="https://lh3.googleusercontent.com/aida/AEtjO1UJalQuhiXFKyA-IOcJZiU_W1P76cqdk31OUixri5eDF6PYPBpIFi2Tcozy1jWjNA0-3z0Rc1gfN9oTFcmAGD6YrCPmPr8biaBRXnkcmGg1toed6LF_kUnoPwPSB7cBMS9U_lAoL3bTu0zuEu9en93LVBeDFSbVlaN6IWX5wElehOtmSiWfWxMlKHHUSaOW-VLzt8VgjzQEaSMPzAT9QLSy9cgCXs3_HMUwFUUEghGOzBKaKgtQO9IpQP8"/><div class="flex flex-col min-w-0"><span class="font-label-sm text-label-sm uppercase tracking-widest text-primary">WedSnap</span><h1 class="font-headline-sm text-headline-sm text-on-surface truncate leading-tight tracking-normal">Galeri Bersama</h1></div></div><div class="flex items-center gap-space-sm flex-shrink-0"><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center shadow-sm"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main class="flex-1 flex flex-col relative w-full pt-16 pb-28 bg-surface"><div class="flex flex-col w-full px-margin pb-10 space-y-space-lg selection:bg-primary-fixed selection:text-on-primary-fixed">
+<!-- Editorial Keepsake Header Section -->
+<div class="relative bg-surface-container-low rounded-xl p-space-lg shadow-sm overflow-hidden flex flex-col items-center text-center">
+<div class="absolute -top-12 -right-12 w-40 h-40 rounded-full bg-secondary-fixed/20 blur-2xl pointer-events-none"></div>
+<div class="absolute -bottom-10 -left-10 w-36 h-36 rounded-full bg-primary-fixed-dim/20 blur-xl pointer-events-none"></div>
+<div class="inline-flex items-center gap-space-xs bg-surface-container-highest px-3 py-1 rounded-full mb-space-sm shadow-sm">
+<span class="material-symbols-outlined text-primary text-[15px]" style="font-variation-settings: 'FILL' 1;">lock</span>
+<span class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant">Galeri Privat Terproteksi PIN</span>
+</div>
+<span class="font-label-md text-label-md uppercase tracking-[0.2em] text-secondary">The Wedding Celebration</span>
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface mt-1 mb-1 tracking-tight">Fajar &amp; Aulia</h2>
+<div class="w-10 h-0.5 bg-primary-container mb-space-sm rounded-full"></div>
+<p class="font-headline-sm text-headline-sm italic text-primary font-normal leading-snug">Kenangan Pernikahan Kami</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant max-w-xs mt-2 leading-relaxed">
+      Koleksi momen spontan dari sudut pandang tamu-tamu terkasih kami.
+    </p>
+<!-- Live Live Stream Counter Pill -->
+<div class="mt-space-md w-full bg-surface-container-lowest/80 backdrop-blur-md rounded-lg p-space-sm flex items-center justify-around shadow-sm">
+<div class="flex flex-col items-center">
+<span class="font-headline-sm text-headline-sm text-primary font-semibold">342</span>
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant">Foto Terkumpul</span>
+</div>
+<div class="h-6 w-px bg-outline-variant/60"></div>
+<div class="flex flex-col items-center">
+<span class="font-headline-sm text-headline-sm text-primary font-semibold">48</span>
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant">Tamu Berbagi</span>
+</div>
+</div>
+<!-- Quick Editorial Action Strip -->
+<div class="flex items-center gap-space-sm w-full mt-space-md">
+<button class="flex-1 bg-surface-container-highest active:bg-surface-dim text-on-surface h-10 px-space-sm rounded-lg flex items-center justify-center gap-space-xs shadow-sm transition-transform active:scale-[0.98]" id="btnShareGallery">
+<span class="material-symbols-outlined text-[18px] text-primary">share</span>
+<span class="font-label-md text-label-md">Bagikan Tautan</span>
+</button>
+<button class="bg-surface-container-highest active:bg-surface-dim text-on-surface-variant h-10 px-3 rounded-lg flex items-center justify-center shadow-sm" id="btnPinProtected">
+<span class="material-symbols-outlined text-[18px]">verified_user</span>
+</button>
+</div>
+</div>
+<!-- Category Filter (Horizontal Scroll with tactile pill styles) -->
+<div class="flex flex-col space-y-space-xs">
+<div class="flex items-center justify-between px-1">
+<span class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant">Kategori Momen</span>
+<span class="font-label-sm text-label-sm text-secondary">Geser • Filter</span>
+</div>
+<div class="flex items-center gap-space-xs overflow-x-auto pb-1 pt-0.5 no-scrollbar -mx-margin px-margin">
+<button class="cat-pill whitespace-nowrap px-4 py-2 rounded-full font-label-md text-label-md transition-all duration-200 bg-primary text-on-primary shadow-sm flex items-center gap-1.5" data-cat="all">
+<span class="material-symbols-outlined text-[15px]" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+<span>Semua Momen</span>
+</button>
+<button class="cat-pill whitespace-nowrap px-4 py-2 rounded-full font-label-md text-label-md transition-all duration-200 bg-surface-container-low text-on-surface-variant hover:bg-surface-container shadow-sm flex items-center gap-1.5" data-cat="akad">
+<span>Akad / Pemberkatan</span>
+</button>
+<button class="cat-pill whitespace-nowrap px-4 py-2 rounded-full font-label-md text-label-md transition-all duration-200 bg-surface-container-low text-on-surface-variant hover:bg-surface-container shadow-sm flex items-center gap-1.5" data-cat="resepsi">
+<span>Resepsi &amp; Dansa</span>
+</button>
+<button class="cat-pill whitespace-nowrap px-4 py-2 rounded-full font-label-md text-label-md transition-all duration-200 bg-surface-container-low text-on-surface-variant hover:bg-surface-container shadow-sm flex items-center gap-1.5" data-cat="candid">
+<span>Meja Tamu &amp; Candid</span>
+</button>
+<button class="cat-pill whitespace-nowrap px-4 py-2 rounded-full font-label-md text-label-md transition-all duration-200 bg-surface-container-low text-on-surface-variant hover:bg-surface-container shadow-sm flex items-center gap-1.5" data-cat="photobooth">
+<span>Photobooth</span>
+</button>
+</div>
+</div>
+<!-- Live Status Bar -->
+<div class="flex items-center justify-between bg-surface-container-low px-space-md py-2.5 rounded-lg">
+<div class="flex items-center gap-2">
+<span class="relative flex h-2.5 w-2.5">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-secondary opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-primary"></span>
+</span>
+<span class="font-label-md text-label-md text-on-surface">Live Sync Aktif</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant" id="activeFilterName">Menampilkan Semua</span>
+</div>
+<!-- Dynamic Gallery Cards Container -->
+<div class="flex flex-col space-y-space-md" id="galleryGrid">
+<!-- Card 1: Akad Highlight -->
+<div class="gallery-card bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm flex flex-col transition-all duration-300" data-category="akad">
+<div class="relative w-full aspect-[4/5] bg-surface-container overflow-hidden group">
+<img class="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105" data-alt="An ethereal fine-art photograph of an Indonesian bride and groom exchanging gold wedding rings during an intimate candlelit Akad ceremony. Soft golden champagne highlights, warm ivory bridal kebaya with delicate floral embroidery, soft ambient glow, editorial Vogue Weddings aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDXMkweGvEM5kLZBIgQ_UANVn_x2963iLNtC78omrADoLwYmbiD20fS5lfq_lsQaUn6YUbRpMrEVBmmEr8br4MqYisdbdsxZYN87lwnFPQ7niqhmjje4KTryfdUKGpx4LZezqyi39nrBYerA-ByR0Bp0RW-auQrgBo22TrjSlpMqf_tlhSjfeDy0PZpCT-cIjp6WMUIAurRP2l4fYzGQARgqs6tx5DbYBFlSr3_7Lh1PKY55k_V8LcBlA"/>
+<div class="absolute inset-0 bg-gradient-to-t from-on-surface/70 via-transparent to-transparent opacity-80"></div>
+<div class="absolute top-3 left-3 bg-surface-container-lowest/90 backdrop-blur-md px-2.5 py-1 rounded-full flex items-center gap-1 shadow-sm">
+<span class="material-symbols-outlined text-primary text-[14px]">church</span>
+<span class="font-label-sm text-label-sm text-on-surface uppercase tracking-wider">Akad</span>
+</div>
+<div class="absolute bottom-3 left-3 right-3 text-on-primary flex flex-col">
+<span class="font-headline-sm text-headline-sm text-surface-bright italic">Ijab Kabul Penuh Khidmat</span>
+<span class="font-body-sm text-body-sm text-surface-bright/90 line-clamp-1">Tatapan pertama yang penuh rasa syukur dan haru.</span>
+</div>
+</div>
+<div class="p-space-md flex flex-col space-y-space-sm bg-surface-container-lowest">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-xs min-w-0">
+<div class="w-7 h-7 rounded-full bg-primary-fixed flex items-center justify-center flex-shrink-0 text-on-primary-fixed font-label-md">
+              M4
+            </div>
+<div class="flex flex-col min-w-0">
+<span class="font-label-md text-label-md text-on-surface truncate">Keluarga Meja 4</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-[13px]">schedule</span> 10 menit lalu
+              </span>
+</div>
+</div>
+<div class="flex items-center gap-1">
+<button class="btn-like p-2 rounded-full text-on-surface-variant hover:text-error active:scale-125 transition-transform flex items-center gap-1">
+<span class="material-symbols-outlined text-[20px] transition-colors">favorite</span>
+<span class="like-count font-label-md text-label-md">42</span>
+</button>
+<button class="btn-download p-2 rounded-full text-on-surface-variant hover:text-primary active:bg-surface-container transition-colors" title="Unduh Foto HD">
+<span class="material-symbols-outlined text-[20px]">download</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Card 2: Resepsi & Dansa -->
+<div class="gallery-card bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm flex flex-col transition-all duration-300" data-category="resepsi">
+<div class="relative w-full aspect-square bg-surface-container overflow-hidden group">
+<img class="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105" data-alt="Joyful newly married couple performing their first dance beneath a luxury canopy of white wisteria and soft sparkling fairy lights, editorial wedding reception, candid laughter, champagne silk gown flowing, cinematic warm lighting, Tatler luxury style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCCEMN0MpZO4n3HuJqVz0Qvzz314MbtOx0ZJX_l0Q4vZv_731NG2DZlyD9aULwqrOKaKTvJ9P78kJma3l_NXiN653y3pFYmIGRFpEUCezV8VnDcKxFmvTBAVhhwVIb_BYZyZLktLfUYmTapARz5lGGbGNS1gFpbGpJ2eboLdN7_9cpp-pHs1QnpjMRPNHKjdy4LBJ4utRmupMcJeS_UE5JxAfTdbXl4-DNX4MIn7VX8iM_XFB3Q5mdKNw"/>
+<div class="absolute inset-0 bg-gradient-to-t from-on-surface/60 via-transparent to-transparent opacity-70"></div>
+<div class="absolute top-3 left-3 bg-surface-container-lowest/90 backdrop-blur-md px-2.5 py-1 rounded-full flex items-center gap-1 shadow-sm">
+<span class="material-symbols-outlined text-secondary text-[14px]">nightlife</span>
+<span class="font-label-sm text-label-sm text-on-surface uppercase tracking-wider">Resepsi</span>
+</div>
+<div class="absolute bottom-3 left-3 right-3 text-on-primary">
+<span class="font-headline-sm text-headline-sm text-surface-bright italic">Dansa Pertama Romantis</span>
+</div>
+</div>
+<div class="p-space-md flex flex-col space-y-space-sm bg-surface-container-lowest">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-xs min-w-0">
+<div class="w-7 h-7 rounded-full bg-secondary-fixed flex items-center justify-center flex-shrink-0 text-on-secondary-fixed font-label-md">
+              DN
+            </div>
+<div class="flex flex-col min-w-0">
+<span class="font-label-md text-label-md text-on-surface truncate">Dimas Nugroho (Bestman)</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-[13px]">schedule</span> 24 menit lalu
+              </span>
+</div>
+</div>
+<div class="flex items-center gap-1">
+<button class="btn-like p-2 rounded-full text-error active:scale-125 transition-transform flex items-center gap-1">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">favorite</span>
+<span class="like-count font-label-md text-label-md">89</span>
+</button>
+<button class="btn-download p-2 rounded-full text-on-surface-variant hover:text-primary active:bg-surface-container transition-colors" title="Unduh Foto HD">
+<span class="material-symbols-outlined text-[20px]">download</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Card 3: Meja Tamu Candid -->
+<div class="gallery-card bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm flex flex-col transition-all duration-300" data-category="candid">
+<div class="relative w-full aspect-[4/3] bg-surface-container overflow-hidden group">
+<img class="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105" data-alt="A candid high-society dinner banquet shot at a warm lavish wedding banquet, guests toasting champagne flutes with golden bubbles, crystal glassware, letterpress menus on linen tablecloths, gentle laughter, natural warm bokeh, documentary style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCKTBb5VGlgfAU9rSVw69fmhwTw0-IP4p5FnVgndoOv49oui_NLGO0UsEgtQBvf9l5NmDAN471_wDwwpjzTwqIYF7KIU-CJo_TJn59LVqjxMYasQJeB95f-D4sLFXP3LX7qXzZBqVzjPRVDGDx7S4cL2u844TQZ-snC7CCP2dxM2MEvdbAoZ6ASZ8mhJCO_aZb9-lZ9mYOQ9VV4pRvEdjyzqqaPEUuQU4IbJXF85RHTZLhznVdH0jt2yA"/>
+<div class="absolute inset-0 bg-gradient-to-t from-on-surface/60 via-transparent to-transparent opacity-70"></div>
+<div class="absolute top-3 left-3 bg-surface-container-lowest/90 backdrop-blur-md px-2.5 py-1 rounded-full flex items-center gap-1 shadow-sm">
+<span class="material-symbols-outlined text-tertiary text-[14px]">wine_bar</span>
+<span class="font-label-sm text-label-sm text-on-surface uppercase tracking-wider">Candid Tamu</span>
+</div>
+</div>
+<div class="p-space-md flex flex-col space-y-space-sm bg-surface-container-lowest">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-xs min-w-0">
+<div class="w-7 h-7 rounded-full bg-tertiary-fixed flex items-center justify-center flex-shrink-0 text-on-tertiary-fixed font-label-md">
+              S8
+            </div>
+<div class="flex flex-col min-w-0">
+<span class="font-label-md text-label-md text-on-surface truncate">Sahabat Meja 8</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-[13px]">schedule</span> 45 menit lalu
+              </span>
+</div>
+</div>
+<div class="flex items-center gap-1">
+<button class="btn-like p-2 rounded-full text-on-surface-variant hover:text-error active:scale-125 transition-transform flex items-center gap-1">
+<span class="material-symbols-outlined text-[20px]">favorite</span>
+<span class="like-count font-label-md text-label-md">19</span>
+</button>
+<button class="btn-download p-2 rounded-full text-on-surface-variant hover:text-primary active:bg-surface-container transition-colors" title="Unduh Foto HD">
+<span class="material-symbols-outlined text-[20px]">download</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Card 4: Photobooth -->
+<div class="gallery-card bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm flex flex-col transition-all duration-300" data-category="photobooth">
+<div class="relative w-full aspect-[4/5] bg-surface-container overflow-hidden group">
+<img class="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105" data-alt="Chic editorial vintage photo booth strip simulation, bridesmaids and groomsmen wearing sage green and champagne suits posing playfully with custom floral arches and retro disposable camera aesthetic, film grain, warm nostalgic tones." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAHGCFjMHibXi4kA-elMJP3kPS6ALKPQpBpnATjiIXP0AdDHuYobuVrm0gS0KytR7P_AOwHcj312Ipw_IW3JBr_fa_rtoFaeUXNY0YC0ZK4sFCq9U0hu0I0-nwJQSJP70TvRilN1WISKLpklVTmw4V1QONbb4L_8DAT5QuBCDnbejLPnL8zcs_kcd79vplGJwNtR9emnKZeX1wjKJsTkeuX89I5X0nm4mFx90AP62aV1ZZmnPofcpS_NQ"/>
+<div class="absolute inset-0 bg-gradient-to-t from-on-surface/60 via-transparent to-transparent opacity-70"></div>
+<div class="absolute top-3 left-3 bg-surface-container-lowest/90 backdrop-blur-md px-2.5 py-1 rounded-full flex items-center gap-1 shadow-sm">
+<span class="material-symbols-outlined text-primary text-[14px]">photo_camera_front</span>
+<span class="font-label-sm text-label-sm text-on-surface uppercase tracking-wider">Photobooth</span>
+</div>
+<div class="absolute bottom-3 left-3 right-3 text-on-primary">
+<span class="font-headline-sm text-headline-sm text-surface-bright italic">Pose Seru Tim Bridesmaid</span>
+</div>
+</div>
+<div class="p-space-md flex flex-col space-y-space-sm bg-surface-container-lowest">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-xs min-w-0">
+<div class="w-7 h-7 rounded-full bg-primary-fixed flex items-center justify-center flex-shrink-0 text-on-primary-fixed font-label-md">
+              TR
+            </div>
+<div class="flex flex-col min-w-0">
+<span class="font-label-md text-label-md text-on-surface truncate">Tia &amp; Rania</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-[13px]">schedule</span> 1 jam lalu
+              </span>
+</div>
+</div>
+<div class="flex items-center gap-1">
+<button class="btn-like p-2 rounded-full text-on-surface-variant hover:text-error active:scale-125 transition-transform flex items-center gap-1">
+<span class="material-symbols-outlined text-[20px]">favorite</span>
+<span class="like-count font-label-md text-label-md">64</span>
+</button>
+<button class="btn-download p-2 rounded-full text-on-surface-variant hover:text-primary active:bg-surface-container transition-colors" title="Unduh Foto HD">
+<span class="material-symbols-outlined text-[20px]">download</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Empty State Fallback -->
+<div class="hidden flex-col items-center justify-center text-center py-space-xl px-space-lg bg-surface-container-low rounded-xl" id="emptyState">
+<div class="w-16 h-16 rounded-full bg-surface-container-highest flex items-center justify-center mb-space-sm">
+<span class="material-symbols-outlined text-primary text-[32px]">photo_library</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface mb-1">Sudut Belum Terjamah</h3>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-xs mb-space-md">
+      Belum ada foto di kategori ini. Jadilah yang pertama mengabadikannya untuk Fajar &amp; Aulia!
+    </p>
+<button class="btn-trigger-camera bg-primary text-on-primary h-11 px-space-lg rounded-lg font-label-lg text-label-lg uppercase tracking-wider shadow-sm flex items-center gap-2 active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-[18px]">photo_camera</span>
+<span>Ambil Foto Pertama</span>
+</button>
+</div>
+<!-- Share & Protection Bottom Sheet / Modal (Dismissible) -->
+<div class="fixed bottom-24 inset-x-margin max-w-sm mx-auto z-50 bg-inverse-surface text-inverse-on-surface px-space-md py-3 rounded-xl shadow-xl flex items-center justify-between transform transition-all duration-300 translate-y-20 opacity-0 pointer-events-none" id="shareToast">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary-fixed text-[20px]">check_circle</span>
+<span class="font-body-sm text-body-sm">Tautan galeri disalin ke papan klip!</span>
+</div>
+<button class="text-inverse-on-surface/80 hover:text-inverse-on-surface" id="closeToast">
+<span class="material-symbols-outlined text-[18px]">close</span>
+</button>
+</div>
+<!-- Sticky Floating Action Bar for Capture Trigger -->
+<div class="sticky bottom-4 z-30 w-full flex justify-center pt-2">
+<button class="btn-trigger-camera w-full max-w-md bg-gradient-to-r from-primary to-primary-container text-on-primary h-14 rounded-full px-space-lg flex items-center justify-between shadow-lg active:scale-[0.98] transition-transform">
+<div class="flex items-center gap-space-sm">
+<div class="w-9 h-9 rounded-full bg-on-primary/20 flex items-center justify-center">
+<span class="material-symbols-outlined text-on-primary text-[20px]">add_a_photo</span>
+</div>
+<div class="flex flex-col text-left">
+<span class="font-label-lg text-label-lg uppercase tracking-wider leading-none">Buka Kamera</span>
+<span class="font-body-sm text-body-sm text-on-primary/80 text-[11px] leading-tight">Unggah momen langsung ke album</span>
+</div>
+</div>
+<div class="flex items-center bg-on-primary/15 px-2.5 py-1 rounded-full text-[12px] font-label-md">
+<span>+ Jepret</span>
+</div>
+</button>
+</div>
+</div>
+<script>
+  // Filter Category Logic
+  const categoryPills = document.querySelectorAll('.cat-pill');
+  const galleryCards = document.querySelectorAll('.gallery-card');
+  const emptyState = document.getElementById('emptyState');
+  const activeFilterName = document.getElementById('activeFilterName');
+
+  categoryPills.forEach(pill => {
+    pill.addEventListener('click', () => {
+      // Toggle pill styles
+      categoryPills.forEach(p => {
+        p.classList.remove('bg-primary', 'text-on-primary');
+        p.classList.add('bg-surface-container-low', 'text-on-surface-variant');
+      });
+      pill.classList.remove('bg-surface-container-low', 'text-on-surface-variant');
+      pill.classList.add('bg-primary', 'text-on-primary');
+
+      const selectedCategory = pill.getAttribute('data-cat');
+      activeFilterName.textContent = pill.textContent.trim();
+
+      let visibleCount = 0;
+      galleryCards.forEach(card => {
+        const cardCat = card.getAttribute('data-category');
+        if (selectedCategory === 'all' || cardCat === selectedCategory) {
+          card.classList.remove('hidden');
+          card.classList.add('flex');
+          visibleCount++;
+        } else {
+          card.classList.add('hidden');
+          card.classList.remove('flex');
+        }
+      });
+
+      if (visibleCount === 0) {
+        emptyState.classList.remove('hidden');
+        emptyState.classList.add('flex');
+      } else {
+        emptyState.classList.add('hidden');
+        emptyState.classList.remove('flex');
+      }
+    });
+  });
+
+  // Like Button Micro-interaction
+  document.querySelectorAll('.btn-like').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const icon = btn.querySelector('.material-symbols-outlined');
+      const counter = btn.querySelector('.like-count');
+      let count = parseInt(counter.textContent, 10);
+
+      const isLiked = btn.classList.contains('text-error');
+      if (isLiked) {
+        btn.classList.remove('text-error');
+        btn.classList.add('text-on-surface-variant');
+        icon.style.fontVariationSettings = "'FILL' 0";
+        counter.textContent = count - 1;
+      } else {
+        btn.classList.remove('text-on-surface-variant');
+        btn.classList.add('text-error');
+        icon.style.fontVariationSettings = "'FILL' 1";
+        counter.textContent = count + 1;
+      }
+    });
+  });
+
+  // Share Toast trigger
+  const btnShare = document.getElementById('btnShareGallery');
+  const shareToast = document.getElementById('shareToast');
+  const closeToast = document.getElementById('closeToast');
+
+  if (btnShare && shareToast) {
+    btnShare.addEventListener('click', () => {
+      shareToast.classList.remove('translate-y-20', 'opacity-0', 'pointer-events-none');
+      shareToast.classList.add('translate-y-0', 'opacity-100');
+
+      setTimeout(() => {
+        shareToast.classList.add('translate-y-20', 'opacity-0', 'pointer-events-none');
+        shareToast.classList.remove('translate-y-0', 'opacity-100');
+      }, 3500);
+    });
+
+    closeToast?.addEventListener('click', () => {
+      shareToast.classList.add('translate-y-20', 'opacity-0', 'pointer-events-none');
+      shareToast.classList.remove('translate-y-0', 'opacity-100');
+    });
+  }
+
+  // Camera Trigger Buttons navigation handler
+  document.querySelectorAll('.btn-trigger-camera').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const cameraTab = document.querySelector('nav a[data-path="camera-view"]');
+      if (cameraTab) {
+        cameraTab.click();
+      } else {
+        window.location.hash = '#camera-view';
+      }
+    });
+  });
+
+  // PIN Protected info
+  const btnPin = document.getElementById('btnPinProtected');
+  if (btnPin) {
+    btnPin.addEventListener('click', () => {
+      alert("Galeri ini diproteksi sandi oleh Pengantin. Semua unggahan telah terverifikasi.");
+    });
+  }
+</script></main><nav class="fixed bottom-0 inset-x-0 z-50 pb-safe bg-surface/90 backdrop-blur-2xl shadow-[0_-4px_24px_rgba(119,90,25,0.06)]" data-active-classes="text-primary font-semibold"><div class="flex justify-around items-center h-20 px-space-xs max-w-lg mx-auto"><a class="flex flex-col items-center justify-center min-w-[64px] min-h-[44px] py-1 text-on-surface-variant transition-colors hover:text-on-surface" data-path="camera-view" href="#"><span class="material-symbols-outlined text-[24px]">photo_camera</span><span class="font-label-sm text-label-sm mt-0.5 tracking-tight">Kamera</span></a><a class="flex flex-col items-center justify-center min-w-[64px] min-h-[44px] py-1 text-on-surface-variant transition-colors hover:text-on-surface" data-path="review-foto" href="#"><span class="material-symbols-outlined text-[24px]">camera_roll</span><span class="font-label-sm text-label-sm mt-0.5 tracking-tight">Review</span></a><a aria-current="page" class="flex flex-col items-center justify-center min-w-[64px] min-h-[44px] py-1 transition-colors text-primary font-semibold" data-path="galeri-bersama" href="#"><span class="material-symbols-outlined text-[24px]">photo_library</span><span class="font-label-sm text-label-sm mt-0.5 tracking-tight">Galeri</span></a><a class="flex flex-col items-center justify-center min-w-[64px] min-h-[44px] py-1 text-on-surface-variant transition-colors hover:text-on-surface" data-path="dashboard-pengantin" href="#"><span class="material-symbols-outlined text-[24px]">favorite</span><span class="font-label-sm text-label-sm mt-0.5 tracking-tight">Pengantin</span></a></div></nav></body></html>
