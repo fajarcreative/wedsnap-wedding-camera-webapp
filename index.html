@@ -46,19 +46,28 @@
       display: none;
     }
   </style>
-  <script type="module" crossorigin src="./assets/index-CKzeqUFs.js"></script>
-  <link rel="stylesheet" crossorigin href="./assets/index-TxYCYn_S.css">
+  <script type="module" crossorigin src="./assets/index-CZzGwStB.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/index-DOn8QPMV.css">
 </head>
 <body class="bg-surface font-sans text-on-surface antialiased selection:bg-primary-fixed selection:text-on-primary-fixed">
   <div id="root"></div>
   <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', function() {
-        navigator.serviceWorker.register('./sw.js').then(function(reg) {
-          console.log('WedSnap Service Worker registered:', reg.scope);
+        navigator.serviceWorker.register('./sw.js?v=3').then(function(reg) {
+          reg.update();
         }).catch(function(err) {
-          console.warn('WedSnap Service Worker registration failed:', err);
+          console.warn('WedSnap Service Worker registration error:', err);
         });
+      });
+
+      // Reload automatically if a new service worker version took over
+      var refreshing = false;
+      navigator.serviceWorker.addEventListener('controllerchange', function() {
+        if (!refreshing) {
+          refreshing = true;
+          window.location.reload();
+        }
       });
     }
   </script>
