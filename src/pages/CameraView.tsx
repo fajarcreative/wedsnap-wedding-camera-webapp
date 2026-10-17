@@ -49,7 +49,7 @@ export const CameraView: React.FC = () => {
   const streamRef = useRef<MediaStream | null>(null);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
-  // Start Browser Camera
+  // Start Browser Camera with progressive mobile fallbacks
   const startCamera = useCallback(async () => {
     try {
       setPermissionError(false);
@@ -58,27 +58,74 @@ export const CameraView: React.FC = () => {
       // Stop existing stream if any
       if (streamRef.current) {
         streamRef.current.getTracks().forEach((track) => track.stop());
+        streamRef.current = null;
       }
 
-      if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-        const stream = await navigator.mediaDevices.getUserMedia({
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        setPermissionError(true);
+        setIsCameraActive(false);
+        return;
+      }
+
+      const constraintPresets: MediaStreamConstraints[] = [
+        {
           video: {
             facingMode: { ideal: facingMode },
-            width: { ideal: 1080 },
-            height: { ideal: 1350 }
+            width: { ideal: 1280 },
+            height: { ideal: 720 }
           },
           audio: false
-        });
-
-        streamRef.current = stream;
-        if (videoRef.current) {
-          videoRef.current.srcObject = stream;
-          videoRef.current.play().catch(() => {});
+        },
+        {
+          video: {
+            facingMode: { ideal: facingMode }
+          },
+          audio: false
+        },
+        {
+          video: {
+            facingMode: facingMode
+          },
+          audio: false
+        },
+        {
+          video: true,
+          audio: false
         }
-        setIsCameraActive(true);
-      } else {
-        setPermissionError(true);
+      ];
+
+      let stream: MediaStream | null = null;
+      let lastErr: any = null;
+
+      for (const preset of constraintPresets) {
+        try {
+          stream = await navigator.mediaDevices.getUserMedia(preset);
+          if (stream) break;
+        } catch (err) {
+          lastErr = err;
+        }
       }
+
+      if (!stream) {
+        throw lastErr || new Error('Tidak dapat mengakses kamera');
+      }
+
+      streamRef.current = stream;
+
+      if (videoRef.current) {
+        const video = videoRef.current;
+        video.muted = true;
+        video.playsInline = true;
+        video.setAttribute('playsinline', 'true');
+        video.setAttribute('webkit-playsinline', 'true');
+        video.srcObject = stream;
+        try {
+          await video.play();
+        } catch (playErr) {
+          console.warn('Auto play video warning:', playErr);
+        }
+      }
+      setIsCameraActive(true);
     } catch (err) {
       console.warn('Camera access error:', err);
       setPermissionError(true);
@@ -133,12 +180,12 @@ export const CameraView: React.FC = () => {
 
     let photoDataUrl = '';
 
-    if (isCameraActive && videoRef.current) {
+    if (videoRef.current && videoRef.current.videoWidth > 0) {
       try {
         const video = videoRef.current;
         const targetRatio = ASPECT_RATIO_VALUES[aspectRatio];
-        const videoW = video.videoWidth || 1080;
-        const videoH = video.videoHeight || 1350;
+        const videoW = video.videoWidth;
+        const videoH = video.videoHeight;
         const videoRatio = videoW / videoH;
 
         let sWidth = videoW;
@@ -332,24 +379,45 @@ export const CameraView: React.FC = () => {
           style={{ aspectRatio: aspectRatio.replace(':', '/') }}
           className="relative w-full h-full max-h-full max-w-full rounded-2xl overflow-hidden bg-black shadow-2xl select-none mx-auto flex items-center justify-center transition-all duration-300"
         >
-          {/* Live Video Feed or Fallback Background */}
-          {isCameraActive ? (
-            <video
-              ref={videoRef}
-              autoPlay
-              playsInline
-              muted
-              className={`w-full h-full object-cover transition-transform ${
-                facingMode === 'user' ? 'scale-x-[-1]' : ''
-              }`}
-            />
-          ) : (
+          {/* Live Video Feed - Always mounted so videoRef is always available */}
+          <video
+            ref={videoRef}
+            autoPlay
+            playsInline
+            muted
+            className={`w-full h-full object-cover transition-opacity duration-300 ${
+              facingMode === 'user' ? 'scale-x-[-1]' : ''
+            } ${isCameraActive ? 'opacity-100' : 'opacity-0'}`}
+          />
+
+          {/* Fallback Overlay & Explicit Activate Button if camera not yet playing */}
+          {!isCameraActive && (
             <div
-              className="absolute inset-0 bg-cover bg-center transition-all duration-300 filter contrast-[1.05] saturate-[1.1]"
+              className="absolute inset-0 bg-cover bg-center transition-all duration-300 filter contrast-[1.05] saturate-[1.1] flex flex-col items-center justify-center p-4 text-center"
               style={{
                 backgroundImage: `url('https://lh3.googleusercontent.com/aida-public/AB6AXuDZtG3lM_qf8sa-IHjbgH6zEGsUUcoIeS8YF9w2N_4riNlq-kp6XSdCTnPIpxO7BDieOmKa9LTmuhJvo8FdeTwsWOJpm2GaSj1HY_slgHvxqIi5dDQBxTL405LSzQ9btFQ3YS2pQ6VjP79PxeLEwrM4KTUWPDNR_2dQWvNUK-HpAcmYMNzhbIR0AtOh9jC0t42zldTICUlLUoO9E_2cbZQtJNeL1TRK3wgdR447MlGvIKwU8nQL2KZpOw')`
               }}
-            />
+            >
+              <div className="bg-black/75 backdrop-blur-md p-4 rounded-2xl max-w-xs text-white border border-white/20 shadow-xl flex flex-col items-center">
+                <span className="material-symbols-outlined text-[36px] text-primary mb-1">
+                  photo_camera
+                </span>
+                <p className="text-xs font-semibold mb-2.5">
+                  {permissionError
+                    ? 'Izin kamera belum aktif. Ketuk tombol untuk menghubungkan kamera HP Anda.'
+                    : 'Menghubungkan ke kamera ponsel...'}
+                </p>
+                <button
+                  type="button"
+                  onClick={startCamera}
+                  disabled={isRetryingCamera}
+                  className="px-4 py-2 rounded-xl bg-primary text-on-primary text-xs font-bold uppercase tracking-wider shadow-md active:scale-95 transition-all flex items-center gap-1.5"
+                >
+                  <span className="material-symbols-outlined text-[16px]">videocam</span>
+                  <span>{isRetryingCamera ? 'Menghubungkan...' : 'Aktifkan Kamera'}</span>
+                </button>
+              </div>
+            </div>
           )}
 
           {/* Film Tint Gradient Overlay */}

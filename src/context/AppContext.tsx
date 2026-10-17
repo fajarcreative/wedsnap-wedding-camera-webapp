@@ -412,8 +412,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
     if (!guestIdentity?.name) {
       setIsIdentityModalOpen(true);
-      showToast('info', 'Mohon lengkapi identitas Anda terlebih dahulu');
-      throw new Error('Identitas tamu belum diisi');
     }
 
     const nextFrame = totalShotsLimit - shotsRemaining + 1;
@@ -421,10 +419,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     const now = new Date();
     const timeStr = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')} WIB`;
 
-    const guestName = guestIdentity.name.trim();
-    const guestTable = guestIdentity.address
+    const guestName = guestIdentity?.name?.trim() || 'Tamu Undangan';
+    const guestTable = guestIdentity?.address
       ? `${guestIdentity.relationship} • ${guestIdentity.address}`
-      : guestIdentity.relationship || 'Tamu Undangan';
+      : guestIdentity?.relationship || 'Meja Tamu';
     const guestInitials = getGuestInitials(guestName);
 
     const newPhoto: Photo = {
