@@ -205,8 +205,13 @@ export const CameraView: React.FC = () => {
         'https://lh3.googleusercontent.com/aida-public/AB6AXuDZtG3lM_qf8sa-IHjbgH6zEGsUUcoIeS8YF9w2N_4riNlq-kp6XSdCTnPIpxO7BDieOmKa9LTmuhJvo8FdeTwsWOJpm2GaSj1HY_slgHvxqIi5dDQBxTL405LSzQ9btFQ3YS2pQ6VjP79PxeLEwrM4KTUWPDNR_2dQWvNUK-HpAcmYMNzhbIR0AtOh9jC0t42zldTICUlLUoO9E_2cbZQtJNeL1TRK3wgdR447MlGvIKwU8nQL2KZpOw';
     }
 
-    await takePhoto(photoDataUrl);
-    setTimeout(() => setIsShutterPressed(false), 200);
+    try {
+      await takePhoto(photoDataUrl);
+    } catch (err) {
+      console.warn('Photo capture ended with notice', err);
+    } finally {
+      setTimeout(() => setIsShutterPressed(false), 200);
+    }
   };
 
   // Upload photo from device file

@@ -11,10 +11,12 @@ export const ReviewView: React.FC = () => {
     setGuestWishInput,
     submitWish,
     retryUpload,
-    resetFilmRoll,
     setPreviewPhoto,
     navigateTo,
-    eventSettings
+    eventSettings,
+    guestIdentity,
+    getGuestInitials,
+    setIsIdentityModalOpen
   } = useApp();
 
   const [activeTab, setActiveTab] = useState<'all' | 'failed'>('all');
@@ -44,7 +46,30 @@ export const ReviewView: React.FC = () => {
         <h2 className="font-headline-md text-headline-md text-on-surface leading-tight text-[24px]">
           Foto Saya di Pernikahan {eventSettings.coupleNames}
         </h2>
-        <p className="font-body-sm text-body-sm text-on-surface-variant mt-1">
+
+        {/* Guest Identity Chip */}
+        {guestIdentity && (
+          <div
+            onClick={() => setIsIdentityModalOpen(true)}
+            className="flex items-center gap-2 bg-surface-container-low px-3 py-1.5 rounded-full border border-outline-variant/30 w-fit mt-2 cursor-pointer hover:bg-surface-container transition-colors shadow-2xs"
+            title="Ketuk untuk ubah identitas tamu"
+          >
+            <span className="w-5 h-5 rounded-full bg-primary text-on-primary text-[10px] font-bold flex items-center justify-center">
+              {getGuestInitials(guestIdentity.name)}
+            </span>
+            <span className="text-xs font-semibold text-on-surface">
+              {guestIdentity.name}
+            </span>
+            <span className="text-[11px] text-tertiary">
+              • {guestIdentity.relationship} ({guestIdentity.address})
+            </span>
+            <span className="material-symbols-outlined text-[14px] text-on-surface-variant">
+              edit
+            </span>
+          </div>
+        )}
+
+        <p className="font-body-sm text-body-sm text-on-surface-variant mt-2">
           Kamu telah mengambil {takenCount} dari maksimal {totalShotsLimit} foto.
         </p>
       </header>
@@ -61,17 +86,6 @@ export const ReviewView: React.FC = () => {
             </span>
           </div>
           <div className="flex items-center gap-2">
-            {takenCount > 0 && (
-              <button
-                onClick={resetFilmRoll}
-                className="bg-surface-container hover:bg-surface-container-high px-2 py-0.5 rounded-full flex items-center gap-1 border border-outline-variant/40 text-on-surface-variant hover:text-primary transition-colors active:scale-95 text-[10px] font-semibold"
-                title="Reset jatah foto kembali ke 36"
-                type="button"
-              >
-                <span className="material-symbols-outlined text-[13px]">restart_alt</span>
-                <span>Reset Rol</span>
-              </button>
-            )}
             <div className="bg-primary/10 px-2.5 py-0.5 rounded-full flex items-center gap-1 border border-primary/20">
               <span className="font-label-sm text-label-sm text-primary font-bold">
                 {shotsRemaining} TERSISA

@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { Photo, EventSettings, GuestWish, AppRoute, ToastMessage } from '../types';
+import { Photo, EventSettings, GuestWish, AppRoute, ToastMessage, GuestIdentity } from '../types';
 import { initialPhotos, initialEventSettings, initialWishes, initialGuestActivities } from '../utils/seedData';
 import confetti from 'canvas-confetti';
 
@@ -31,6 +31,18 @@ interface AppContextType {
   isEmptyStateMode: boolean;
   toggleEmptyStateMode: () => void;
   guestActivities: typeof initialGuestActivities;
+  // Guest Identity Onboarding
+  guestIdentity: GuestIdentity | null;
+  saveGuestIdentity: (identity: GuestIdentity) => void;
+  isIdentityModalOpen: boolean;
+  setIsIdentityModalOpen: (open: boolean) => void;
+  getGuestInitials: (name?: string) => string;
+  // PWA Mobile App Installation
+  deferredPrompt: any;
+  isAppInstalled: boolean;
+  isInstallModalOpen: boolean;
+  setIsInstallModalOpen: (open: boolean) => void;
+  installPWA: () => Promise<void>;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -45,20 +57,121 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     return 'camera';
   });
 
-  // Empty state toggle mode (Rule #12)
+  // Empty state mode (keeps default clean)
   const [isEmptyStateMode, setIsEmptyStateMode] = useState<boolean>(() => {
     return localStorage.getItem('wedsnap_empty_mode') === 'true';
   });
 
-  // Ensure fresh clean session for all new visitors or resets (Rule #12 & User Request)
-  if (typeof window !== 'undefined' && localStorage.getItem('wedsnap_v5_clean_slate') !== 'true') {
+  // Ensure fresh clean session for all new visitors or resets
+  if (typeof window !== 'undefined' && localStorage.getItem('wedsnap_v6_clean_slate') !== 'true') {
     localStorage.removeItem('wedsnap_photos');
     localStorage.removeItem('wedsnap_shots_remaining');
     localStorage.removeItem('wedsnap_wishes');
     localStorage.removeItem('wedsnap_settings');
     localStorage.removeItem('wedsnap_empty_mode');
-    localStorage.setItem('wedsnap_v5_clean_slate', 'true');
+    localStorage.setItem('wedsnap_v6_clean_slate', 'true');
   }
+
+  // Guest Identity State (mandatory for all guests)
+  const [guestIdentity, setGuestIdentity] = useState<GuestIdentity | null>(() => {
+    const saved = localStorage.getItem('wedsnap_guest_identity');
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        if (parsed && parsed.name && parsed.name.trim()) {
+          return parsed;
+        }
+      } catch (e) {
+        console.error('Error parsing guest identity', e);
+      }
+    }
+    return null;
+  });
+
+  // If no guest identity is set, prompt modal immediately on open
+  const [isIdentityModalOpen, setIsIdentityModalOpen] = useState<boolean>(() => {
+    if (typeof window === 'undefined') return false;
+    const saved = localStorage.getItem('wedsnap_guest_identity');
+    if (!saved) return true;
+    try {
+      const parsed = JSON.parse(saved);
+      return !parsed || !parsed.name || !parsed.name.trim();
+    } catch {
+      return true;
+    }
+  });
+
+  // PWA Installation states
+  const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
+  const [isAppInstalled, setIsAppInstalled] = useState<boolean>(() => {
+    if (typeof window === 'undefined') return false;
+    return (
+      window.matchMedia('(display-mode: standalone)').matches ||
+      (window.navigator as any).standalone === true
+    );
+  });
+  const [isInstallModalOpen, setIsInstallModalOpen] = useState<boolean>(false);
+
+  // Helper to extract clean initials from name
+  const getGuestInitials = (name?: string): string => {
+    if (!name) return 'TM';
+    const parts = name.trim().split(/\s+/).filter(Boolean);
+    if (parts.length === 0) return 'TM';
+    if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
+    return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+  };
+
+  const saveGuestIdentity = (identity: GuestIdentity) => {
+    const updated: GuestIdentity = {
+      ...identity,
+      registeredAt: identity.registeredAt || new Date().toISOString()
+    };
+    setGuestIdentity(updated);
+    localStorage.setItem('wedsnap_guest_identity', JSON.stringify(updated));
+    setIsIdentityModalOpen(false);
+    showToast('badge', `Selamat datang, ${updated.name}! Identitas Anda telah aktif.`);
+  };
+
+  // PWA beforeinstallprompt and appinstalled event listeners
+  useEffect(() => {
+    const handleBeforeInstallPrompt = (e: Event) => {
+      e.preventDefault();
+      setDeferredPrompt(e);
+    };
+
+    const handleAppInstalled = () => {
+      setIsAppInstalled(true);
+      setDeferredPrompt(null);
+      showToast('check_circle', 'Aplikasi WedSnap berhasil dipasang di perangkat Anda!');
+    };
+
+    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+    window.addEventListener('appinstalled', handleAppInstalled);
+
+    return () => {
+      window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+      window.removeEventListener('appinstalled', handleAppInstalled);
+    };
+  }, []);
+
+  const installPWA = async () => {
+    if (deferredPrompt) {
+      try {
+        deferredPrompt.prompt();
+        const choiceResult = await deferredPrompt.userChoice;
+        if (choiceResult.outcome === 'accepted') {
+          setIsAppInstalled(true);
+          showToast('download_done', 'Aplikasi WedSnap berhasil dipasang!');
+        }
+        setDeferredPrompt(null);
+      } catch (err) {
+        console.error('Error triggering PWA install:', err);
+        setIsInstallModalOpen(true);
+      }
+    } else {
+      setIsInstallModalOpen(true);
+    }
+  };
 
   // Photos state
   const [photos, setPhotos] = useState<Photo[]>(() => {
@@ -73,7 +186,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     return initialPhotos;
   });
 
-  // Guest film exposures remaining (starts fresh with full 36 shots!)
+  // Guest film exposures remaining (starts fresh with full 36 shots)
   const [shotsRemaining, setShotsRemaining] = useState<number>(() => {
     const saved = localStorage.getItem('wedsnap_shots_remaining');
     return saved ? parseInt(saved, 10) : 36;
@@ -96,7 +209,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   const [guestWishInput, setGuestWishInput] = useState<string>('');
 
-  // Event settings - coupleNames, date, venue are immutable and strictly locked for all visitors
+  // Event settings - coupleNames, date, venue are strictly locked and immutable
   const [eventSettings, setEventSettings] = useState<EventSettings>(() => {
     const saved = localStorage.getItem('wedsnap_settings');
     let parsed: Partial<EventSettings> = {};
@@ -127,7 +240,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [isSlideshowOpen, setIsSlideshowOpen] = useState(false);
   const [isTableQROpen, setIsTableQROpen] = useState(false);
 
-  // Reset film roll to fresh state (36 exposures, 0 user photos)
+  // Reset film roll programmatically
   const resetFilmRoll = () => {
     setShotsRemaining(36);
     setPhotos(initialPhotos);
@@ -136,7 +249,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     showToast('restart_alt', 'Rol film Anda telah di-reset (36 foto baru siap digunakan)!');
   };
 
-  // Support ?reset=1 URL parameter for instant fresh start
+  // Support ?reset=1 URL parameter for instant fresh start if needed
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const params = new URLSearchParams(window.location.search);
@@ -198,15 +311,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     const newMode = !isEmptyStateMode;
     setIsEmptyStateMode(newMode);
     localStorage.setItem('wedsnap_empty_mode', newMode.toString());
-    showToast(
-      newMode ? 'visibility_off' : 'visibility',
-      newMode ? 'Mode Empty State diaktifkan (tanpa data demo)' : 'Mode Data Live/Demo diaktifkan'
-    );
   };
 
   const updateSettings = (partial: Partial<EventSettings>) => {
     setEventSettings((prev) => {
-      // Disallow changing coupleNames, title, date, venue from visitors
       const safePartial = { ...partial };
       delete (safePartial as any).coupleNames;
       delete (safePartial as any).title;
@@ -228,11 +336,17 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     });
   };
 
-  // Take photo function
+  // Take photo function branded with real guest identity
   const takePhoto = async (dataUrl: string, caption?: string): Promise<Photo> => {
     if (shotsRemaining <= 0) {
       showToast('warning', 'Rol film Anda telah habis! Silakan nikmati galeri bersama.', 'error');
       throw new Error('Rol film habis');
+    }
+
+    if (!guestIdentity?.name) {
+      setIsIdentityModalOpen(true);
+      showToast('info', 'Mohon lengkapi identitas Anda terlebih dahulu');
+      throw new Error('Identitas tamu belum diisi');
     }
 
     const nextFrame = totalShotsLimit - shotsRemaining + 1;
@@ -240,13 +354,19 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     const now = new Date();
     const timeStr = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')} WIB`;
 
+    const guestName = guestIdentity.name.trim();
+    const guestTable = guestIdentity.address
+      ? `${guestIdentity.relationship} • ${guestIdentity.address}`
+      : guestIdentity.relationship || 'Tamu Undangan';
+    const guestInitials = getGuestInitials(guestName);
+
     const newPhoto: Photo = {
       id: newId,
       url: dataUrl,
       caption: caption || `Momen Spontan #${nextFrame}`,
-      author: 'Anda (Tamu Undangan)',
-      authorInitials: 'Saya',
-      table: 'Meja Tamu',
+      author: guestName,
+      authorInitials: guestInitials,
+      table: guestTable,
       category: 'candid',
       timestamp: timeStr,
       timeAgo: 'Baru saja',
@@ -269,13 +389,13 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       showToast('cloud_done', `Foto #${nextFrame} berhasil tersimpan di album kenangan pengantin!`);
     }, 1500);
 
-    // Add to real-time activity feed
+    // Add to real-time activity feed with real guest identity
     setGuestActivities((prev) => [
       {
         id: `act-${Date.now()}`,
-        author: 'Anda (Tamu Undangan)',
-        initials: 'SY',
-        table: 'Meja Tamu',
+        author: guestName,
+        initials: guestInitials,
+        table: guestTable,
         timeAgo: 'Baru saja',
         photoCount: 1,
         thumbnail: dataUrl
@@ -329,10 +449,22 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       showToast('info', 'Silakan ketik doa atau pesan terlebih dahulu');
       return;
     }
+
+    if (!guestIdentity?.name) {
+      setIsIdentityModalOpen(true);
+      showToast('info', 'Mohon lengkapi identitas Anda terlebih dahulu');
+      return;
+    }
+
+    const guestName = guestIdentity.name.trim();
+    const guestTable = guestIdentity.address
+      ? `${guestIdentity.relationship} • ${guestIdentity.address}`
+      : guestIdentity.relationship || 'Tamu Undangan';
+
     const newWish: GuestWish = {
       id: `wish-${Date.now()}`,
-      author: 'Anda (Tamu Undangan)',
-      table: 'Meja Tamu',
+      author: guestName,
+      table: guestTable,
       message: text,
       timestamp: 'Baru saja'
     };
@@ -379,7 +511,17 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         setIsTableQROpen,
         isEmptyStateMode,
         toggleEmptyStateMode,
-        guestActivities: isEmptyStateMode ? [] : guestActivities
+        guestActivities: isEmptyStateMode ? [] : guestActivities,
+        guestIdentity,
+        saveGuestIdentity,
+        isIdentityModalOpen,
+        setIsIdentityModalOpen,
+        getGuestInitials,
+        deferredPrompt,
+        isAppInstalled,
+        isInstallModalOpen,
+        setIsInstallModalOpen,
+        installPWA
       }}
     >
       {children}
@@ -394,4 +536,3 @@ export const useApp = () => {
   }
   return context;
 };
-

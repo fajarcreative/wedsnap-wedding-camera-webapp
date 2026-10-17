@@ -3,7 +3,15 @@ import { useApp } from '../context/AppContext';
 import { AppRoute } from '../types';
 
 export const Header: React.FC = () => {
-  const { currentRoute, navigateTo, isEmptyStateMode, toggleEmptyStateMode } = useApp();
+  const {
+    currentRoute,
+    navigateTo,
+    guestIdentity,
+    getGuestInitials,
+    setIsIdentityModalOpen,
+    installPWA,
+    isAppInstalled
+  } = useApp();
 
   const getPageTitle = (route: AppRoute) => {
     switch (route) {
@@ -84,40 +92,40 @@ export const Header: React.FC = () => {
           </button>
         </div>
 
-        {/* Right Actions: Empty State Switcher & Profile */}
+        {/* Right Actions: Install App Button & Guest Profile */}
         <div className="flex items-center gap-space-xs flex-shrink-0">
+          {/* Install App Button */}
+          {!isAppInstalled && (
+            <button
+              onClick={installPWA}
+              title="Pasang WedSnap sebagai aplikasi di HP (Add to Home Screen)"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-label-sm bg-primary/10 hover:bg-primary/20 text-primary border border-primary/30 transition-all active:scale-95 shadow-2xs font-semibold"
+            >
+              <span className="material-symbols-outlined text-[16px]">install_mobile</span>
+              <span className="hidden sm:inline">Pasang Aplikasi</span>
+              <span className="sm:hidden">Instal</span>
+            </button>
+          )}
+
+          {/* Guest Identity Profile Trigger */}
           <button
-            onClick={toggleEmptyStateMode}
+            onClick={() => setIsIdentityModalOpen(true)}
+            className="flex items-center gap-1.5 p-1 sm:px-2.5 sm:py-1 rounded-full bg-surface-container hover:bg-surface-container-high border border-outline-variant/30 text-on-surface transition-all active:scale-95"
             title={
-              isEmptyStateMode
-                ? 'Mode saat ini: Empty State Kosong (Klik untuk beralih ke Data Demo Stitch)'
-                : 'Mode saat ini: Data Demo Stitch (Klik untuk beralih ke Empty State Kosong)'
+              guestIdentity?.name
+                ? `${guestIdentity.name} (${guestIdentity.relationship}) - Ketuk untuk ubah identitas`
+                : 'Isi Identitas Tamu Undangan'
             }
-            className={`flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-label-sm border transition-all ${
-              isEmptyStateMode
-                ? 'bg-secondary-container/40 text-on-secondary-container border-secondary/30'
-                : 'bg-surface-container text-on-surface-variant border-outline-variant/40'
-            }`}
           >
-            <span className="material-symbols-outlined text-[14px]">
-              {isEmptyStateMode ? 'folder_open' : 'dataset'}
-            </span>
-            <span className="hidden sm:inline font-semibold">
-              {isEmptyStateMode ? 'Empty State' : 'Data Demo'}
+            <div className="w-7 h-7 rounded-full bg-primary text-on-primary flex items-center justify-center text-[11px] font-bold shadow-xs">
+              {guestIdentity?.name ? getGuestInitials(guestIdentity.name) : 'TM'}
+            </div>
+            <span className="hidden sm:inline text-xs font-semibold max-w-[90px] truncate text-on-surface">
+              {guestIdentity?.name || 'Tamu'}
             </span>
           </button>
-
-          <div
-            className="w-8 h-8 rounded-full bg-primary flex items-center justify-center shadow-sm cursor-pointer hover:opacity-90"
-            title="Profil Pengguna & Tamu"
-          >
-            <span className="material-symbols-outlined text-on-primary text-[18px]">
-              person
-            </span>
-          </div>
         </div>
       </div>
     </header>
   );
 };
-

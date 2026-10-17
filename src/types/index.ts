@@ -48,3 +48,10 @@ export interface ToastMessage {
   type?: 'success' | 'error' | 'info';
 }
 
+export interface GuestIdentity {
+  name: string;
+  address: string;
+  relationship: string;
+  registeredAt?: string;
+}
+

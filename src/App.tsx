@@ -6,6 +6,8 @@ import { Toast } from './components/Toast';
 import { PolaroidModal } from './components/PolaroidModal';
 import { SlideshowModal } from './components/SlideshowModal';
 import { TableQRModal } from './components/TableQRModal';
+import { GuestIdentityModal } from './components/GuestIdentityModal';
+import { InstallAppModal } from './components/InstallAppModal';
 import { CameraView } from './pages/CameraView';
 import { ReviewView } from './pages/ReviewView';
 import { GalleryView } from './pages/GalleryView';
@@ -43,6 +45,8 @@ export const AppContent: React.FC = () => {
       <PolaroidModal />
       <SlideshowModal />
       <TableQRModal />
+      <GuestIdentityModal />
+      <InstallAppModal />
     </div>
   );
 };

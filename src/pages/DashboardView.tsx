@@ -10,8 +10,6 @@ export const DashboardView: React.FC = () => {
     showToast,
     setIsSlideshowOpen,
     setIsTableQROpen,
-    isEmptyStateMode,
-    toggleEmptyStateMode,
     guestActivities
   } = useApp();
 
@@ -125,26 +123,6 @@ export const DashboardView: React.FC = () => {
 
   return (
     <div className="flex flex-col w-full px-gutter pb-16 space-y-space-lg max-w-lg md:max-w-3xl lg:max-w-5xl mx-auto">
-      {/* Prototype / Production Disclaimer Banner (Rule #12) */}
-      <div className="flex items-center justify-between bg-surface-container-low px-space-md py-space-xs rounded-xl border border-outline-variant/30">
-        <div className="flex items-center gap-space-xs min-w-0">
-          <span className="material-symbols-outlined text-primary text-[18px] flex-shrink-0">
-            {isEmptyStateMode ? 'folder_open' : 'info'}
-          </span>
-          <p className="font-body-sm text-body-sm text-on-surface-variant truncate text-xs">
-            {isEmptyStateMode
-              ? 'Mode Produksi Bersih (Empty State aktif)'
-              : 'Data pratinjau desain interaktif (Stitch demo).'}
-          </p>
-        </div>
-        <button
-          onClick={toggleEmptyStateMode}
-          className="font-label-sm text-label-sm uppercase tracking-wider text-primary font-bold text-[11px] hover:underline flex-shrink-0 ml-2"
-        >
-          {isEmptyStateMode ? 'Ganti ke Demo' : 'Uji Empty State'}
-        </button>
-      </div>
-
       {/* Event Header & Live Badge */}
       <section className="flex flex-col space-y-space-sm bg-surface-container-lowest p-space-lg rounded-xl shadow-[0_4px_20px_-2px_rgba(197,160,89,0.08)] border border-outline-variant/30">
         <div className="flex items-center justify-between">
