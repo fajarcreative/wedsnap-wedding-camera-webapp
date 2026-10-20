@@ -57,10 +57,14 @@ const AppContext = createContext<AppContextType | undefined>(undefined);
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   // Navigation state (supports hash routing as fallback, default to home)
   const [currentRoute, setCurrentRoute] = useState<AppRoute>(() => {
-    const hash = window.location.hash.replace('#', '') as AppRoute;
-    if (['home', 'camera', 'review', 'gallery', 'chat', 'dashboard'].includes(hash)) {
-      return hash;
-    }
+    try {
+      if (typeof window !== 'undefined' && window.location && window.location.hash) {
+        const hash = window.location.hash.replace('#', '') as AppRoute;
+        if (['home', 'camera', 'review', 'gallery', 'chat', 'dashboard'].includes(hash)) {
+          return hash;
+        }
+      }
+    } catch {}
     return 'home';
   });
 
@@ -117,11 +121,14 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   // PWA Installation states
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
   const [isAppInstalled, setIsAppInstalled] = useState<boolean>(() => {
-    if (typeof window === 'undefined') return false;
-    return (
-      window.matchMedia('(display-mode: standalone)').matches ||
-      (window.navigator as any).standalone === true
-    );
+    try {
+      if (typeof window !== 'undefined') {
+        const isStandalone = (window.navigator as any)?.standalone === true;
+        const matchesMedia = typeof window.matchMedia === 'function' && window.matchMedia('(display-mode: standalone)').matches;
+        return Boolean(isStandalone || matchesMedia);
+      }
+    } catch {}
+    return false;
   });
   const [isInstallModalOpen, setIsInstallModalOpen] = useState<boolean>(false);
 
@@ -279,13 +286,17 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   // Initialize and load photos from high-capacity IndexedDB on startup
   useEffect(() => {
-    getAllPhotosFromDB().then((dbPhotos) => {
-      if (dbPhotos && dbPhotos.length > 0) {
-        setPhotos(dbPhotos);
-      } else {
-        saveAllPhotosToDB(initialPhotos);
-      }
-    });
+    getAllPhotosFromDB()
+      .then((dbPhotos) => {
+        if (dbPhotos && dbPhotos.length > 0) {
+          setPhotos(dbPhotos);
+        } else {
+          saveAllPhotosToDB(initialPhotos).catch(() => {});
+        }
+      })
+      .catch((err) => {
+        console.warn('WedSnap: IndexedDB initialization fallback:', err);
+      });
   }, []);
 
   // Sync route to window hash
