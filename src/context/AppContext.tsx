@@ -4,6 +4,7 @@ import { initialPhotos, initialEventSettings, initialWishes, initialGuestActivit
 import { safeStorage } from '../utils/storage';
 import { fetchRemoteMessages, persistRemoteMessages, broadcastNewMessage, broadcastReaction, subscribeToRealtimeChat } from '../utils/chatSync';
 import { getAllPhotosFromDB, savePhotoToDB, saveAllPhotosToDB, deletePhotoFromDB, clearPhotosDB, compressImageForStorage } from '../utils/photoStorage';
+import { uploadPhotoToCloud, broadcastPhotoLike, syncMissingPhotos } from '../utils/photoSync';
 import confetti from 'canvas-confetti';
 
 interface AppContextType {
@@ -50,6 +51,10 @@ interface AppContextType {
   chatMessages: ChatMessage[];
   sendChatMessage: (text: string) => void;
   addChatReaction: (messageId: string, emoji: string) => void;
+  // Cloud Sync Utilities
+  refreshChatNow: () => Promise<void>;
+  refreshGalleryNow: () => Promise<void>;
+  isSyncing: boolean;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -353,7 +358,59 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     safeStorage.setItem('wedsnap_chat_messages', JSON.stringify(chatMessages));
   }, [chatMessages]);
 
-  // Real-time cross-device synchronization (SSE + Cloud Database + Background Polling)
+  // Syncing state indicator
+  const [isSyncing, setIsSyncing] = useState<boolean>(false);
+
+  // Manual refresh for chat
+  const refreshChatNow = async () => {
+    try {
+      setIsSyncing(true);
+      const remote = await fetchRemoteMessages();
+      if (remote && remote.length > 0) {
+        setChatMessages((prev) => {
+          const map = new Map<string, ChatMessage>();
+          prev.forEach((m) => map.set(m.id, m));
+          remote.forEach((rm) => {
+            map.set(rm.id, {
+              ...rm,
+              isMyMessage: Boolean(guestIdentity?.name && rm.senderName === guestIdentity.name)
+            });
+          });
+          return Array.from(map.values());
+        });
+        showToast('sync', 'Pesan obrolan telah diperbarui');
+      }
+    } catch (e) {
+      console.warn('refreshChatNow error:', e);
+    } finally {
+      setIsSyncing(false);
+    }
+  };
+
+  // Manual refresh for shared gallery
+  const refreshGalleryNow = async () => {
+    try {
+      setIsSyncing(true);
+      const count = await syncMissingPhotos(photos, (newPhotos) => {
+        setPhotos((prev) => {
+          const existingIds = new Set(prev.map((p) => p.id));
+          const toAdd = newPhotos.filter((p) => !existingIds.has(p.id));
+          return toAdd.length > 0 ? [...toAdd, ...prev] : prev;
+        });
+      });
+      if (count > 0) {
+        showToast('photo_library', `${count} foto baru dari tamu berhasil disinkronkan!`);
+      } else {
+        showToast('cloud_done', 'Galeri foto bersama sudah paling terbaru!');
+      }
+    } catch (e) {
+      console.warn('refreshGalleryNow error:', e);
+    } finally {
+      setIsSyncing(false);
+    }
+  };
+
+  // Real-time cross-device synchronization (SSE + Cloud Database + Fast Polling)
   useEffect(() => {
     let isMounted = true;
 
@@ -376,15 +433,25 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       });
     };
 
-    // 1. Initial fetch from cloud database
+    // 1. Initial fetch from cloud database for messages & missing shared photos
     fetchRemoteMessages().then((remote) => {
       if (isMounted && remote && remote.length > 0) {
         mergeMessages(remote);
       }
     });
 
-    // 2. Real-time SSE stream listener (instant push without polling lag)
+    syncMissingPhotos(photos, (newPhotos) => {
+      if (!isMounted || newPhotos.length === 0) return;
+      setPhotos((prev) => {
+        const existingIds = new Set(prev.map((p) => p.id));
+        const toAdd = newPhotos.filter((p) => !existingIds.has(p.id));
+        return toAdd.length > 0 ? [...toAdd, ...prev] : prev;
+      });
+    });
+
+    // 2. Real-time SSE stream listener (instant push for chat messages, reactions & photos)
     const unsubscribe = subscribeToRealtimeChat(
+      // onNewMessage
       (incomingMsg) => {
         if (!isMounted) return;
         setChatMessages((prev) => {
@@ -402,6 +469,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
           ];
         });
       },
+      // onReaction
       (msgId, emoji) => {
         if (!isMounted) return;
         setChatMessages((prev) =>
@@ -414,22 +482,71 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
             return msg;
           })
         );
+      },
+      // onNewPhoto (real-time photo shared across all guest phones)
+      (incomingPhoto) => {
+        if (!isMounted) return;
+        setPhotos((prev) => {
+          if (prev.some((p) => p.id === incomingPhoto.id)) return prev;
+          const isMe = Boolean(guestIdentity?.name && incomingPhoto.author === guestIdentity.name);
+          const guestPhoto: Photo = {
+            ...incomingPhoto,
+            isUserPhoto: isMe,
+            status: 'saved'
+          };
+          savePhotoToDB(guestPhoto).catch(() => {});
+          if (!isMe) {
+            showToast('photo_library', `Foto baru ditambahkan oleh ${incomingPhoto.author}!`);
+            setGuestActivities((acts) => [
+              {
+                id: `act-${Date.now()}`,
+                author: incomingPhoto.author,
+                initials: incomingPhoto.authorInitials || 'TM',
+                table: incomingPhoto.table || 'Meja Tamu',
+                timeAgo: 'Baru saja',
+                photoCount: 1,
+                thumbnail: incomingPhoto.url
+              },
+              ...acts
+            ]);
+          }
+          return [guestPhoto, ...prev];
+        });
+      },
+      // onPhotoLike
+      (photoId, likes) => {
+        if (!isMounted) return;
+        setPhotos((prev) =>
+          prev.map((p) => (p.id === photoId ? { ...p, likes } : p))
+        );
       }
     );
 
-    // 3. Fallback polling every 5 seconds to guarantee all devices stay in sync
-    const pollInterval = setInterval(() => {
+    // 3. Fast fallback polling (1.5s for chat messages, 5s for shared photos)
+    const chatPollInterval = setInterval(() => {
       fetchRemoteMessages().then((remote) => {
         if (isMounted && remote && remote.length > 0) {
           mergeMessages(remote);
         }
+      });
+    }, 1500);
+
+    const photoPollInterval = setInterval(() => {
+      syncMissingPhotos(photos, (newPhotos) => {
+        if (!isMounted || newPhotos.length === 0) return;
+        setPhotos((prev) => {
+          const existingIds = new Set(prev.map((p) => p.id));
+          const toAdd = newPhotos.filter((p) => !existingIds.has(p.id));
+          return toAdd.length > 0 ? [...toAdd, ...prev] : prev;
+        });
       });
     }, 5000);
 
     return () => {
       isMounted = false;
       unsubscribe();
-      clearInterval(pollInterval);
+      clearInterval(chatPollInterval);
+      clearInterval(photoPollInterval);
     };
   }, [guestIdentity?.name]);
 
@@ -531,7 +648,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     });
   };
 
-  // Take photo function branded with real guest identity and high-capacity IndexedDB storage
+  // Take photo function branded with real guest identity, IndexedDB storage, and instant cloud sync
   const takePhoto = async (dataUrl: string, caption?: string): Promise<Photo> => {
     if (shotsRemaining <= 0) {
       showToast('warning', 'Kapasitas foto 10.000 foto telah habis! Silakan nikmati galeri bersama.', 'error');
@@ -542,11 +659,11 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       setIsIdentityModalOpen(true);
     }
 
-    // Compress image to ensure high-capacity storage for up to 10,000 photos
-    const optimizedUrl = await compressImageForStorage(dataUrl, 1280, 0.78);
+    // Compress image to ensure high-capacity storage (up to 10,000 photos) and fast cloud sync (~50KB)
+    const optimizedUrl = await compressImageForStorage(dataUrl, 1080, 0.72);
 
     const nextFrame = totalShotsLimit - shotsRemaining + 1;
-    const newId = `user-photo-${Date.now()}`;
+    const newId = `user-photo-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`;
     const now = new Date();
     const timeStr = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')} WIB`;
 
@@ -566,36 +683,33 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       category: 'candid',
       timestamp: timeStr,
       timeAgo: 'Baru saja',
-      status: 'uploading',
+      status: 'saved',
       likes: 1,
       isLikedByMe: true,
       frameNumber: nextFrame,
       isUserPhoto: true
     };
 
-    // Save directly to IndexedDB
-    savePhotoToDB(newPhoto);
+    // 1. Save directly to local IndexedDB for immediate offline-first access
+    await savePhotoToDB(newPhoto);
 
+    // 2. Optimistically update local photos state
     setPhotos((prev) => [newPhoto, ...prev]);
     const updatedShots = Math.max(0, shotsRemaining - 1);
     setShotsRemaining(updatedShots);
 
-    // Simulate upload delay and status change to 'saved'
-    setTimeout(() => {
-      setPhotos((prev) =>
-        prev.map((p) => {
-          if (p.id === newId) {
-            const savedPhoto = { ...p, status: 'saved' as const };
-            savePhotoToDB(savedPhoto);
-            return savedPhoto;
-          }
-          return p;
-        })
-      );
-      showToast('cloud_done', `Foto #${nextFrame} berhasil tersimpan di album (Kapasitas 10.000 Foto)!`);
-    }, 1200);
+    showToast('cloud_done', `Foto #${nextFrame} tersimpan! Sedang menyinkronkan ke Galeri Bersama Tamu...`);
 
-    // Add to real-time activity feed with real guest identity
+    // 3. Upload to cloud in background so all other guest devices see it immediately
+    uploadPhotoToCloud(newPhoto).then((ok) => {
+      if (ok) {
+        showToast('cloud_done', `Foto #${nextFrame} berhasil terhubung di Galeri Bersama Semua Tamu!`);
+      }
+    }).catch((err) => {
+      console.warn('Photo cloud upload warning:', err);
+    });
+
+    // 4. Add to real-time activity feed with real guest identity
     setGuestActivities((prev) => [
       {
         id: `act-${Date.now()}`,
@@ -639,11 +753,15 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       prev.map((p) => {
         if (p.id === id) {
           const isLiked = p.isLikedByMe;
-          return {
+          const newLikes = isLiked ? Math.max(0, p.likes - 1) : p.likes + 1;
+          const updatedPhoto: Photo = {
             ...p,
             isLikedByMe: !isLiked,
-            likes: isLiked ? Math.max(0, p.likes - 1) : p.likes + 1
+            likes: newLikes
           };
+          savePhotoToDB(updatedPhoto).catch(() => {});
+          broadcastPhotoLike(id, newLikes);
+          return updatedPhoto;
         }
         return p;
       })
@@ -731,7 +849,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         installPWA,
         chatMessages,
         sendChatMessage,
-        addChatReaction
+        addChatReaction,
+        refreshChatNow,
+        refreshGalleryNow,
+        isSyncing
       }}
     >
       {children}

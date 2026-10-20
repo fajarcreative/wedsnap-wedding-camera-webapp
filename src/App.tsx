@@ -20,13 +20,15 @@ export const AppContent: React.FC = () => {
 
   return (
     <div className="bg-surface font-sans text-on-surface antialiased min-h-screen flex flex-col selection:bg-primary-fixed selection:text-on-primary-fixed">
-      {/* Fixed Sticky Header */}
-      <Header />
+      {/* Fixed Sticky Header (Hidden in chat view for immersive WhatsApp-style group chat) */}
+      {currentRoute !== 'chat' && <Header />}
 
       {/* Main Content Area */}
       <main
         className={`flex-1 flex flex-col relative w-full ${
-          currentRoute === 'camera' || currentRoute === 'chat'
+          currentRoute === 'chat'
+            ? 'h-[100dvh] max-h-[100dvh] pb-16 overflow-hidden'
+            : currentRoute === 'camera'
             ? 'pt-16 pb-20 h-[100dvh] max-h-[100dvh] overflow-hidden'
             : 'pt-20 pb-28 min-h-screen'
         } bg-surface`}

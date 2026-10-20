@@ -9,7 +9,9 @@ export const GalleryView: React.FC = () => {
     navigateTo,
     showToast,
     eventSettings,
-    setPreviewPhoto
+    setPreviewPhoto,
+    refreshGalleryNow,
+    isSyncing
   } = useApp();
 
   const [activeCategory, setActiveCategory] = useState<PhotoCategory | 'all'>('all');
@@ -172,20 +174,28 @@ export const GalleryView: React.FC = () => {
         </div>
       </div>
 
-      {/* Live Status Bar */}
-      <div className="flex items-center justify-between bg-surface-container-low px-space-md py-2.5 rounded-lg border border-outline-variant/30">
+      {/* Live Status Bar with Manual Refresh */}
+      <div className="flex items-center justify-between bg-surface-container-low px-space-md py-2.5 rounded-lg border border-outline-variant/30 shadow-2xs">
         <div className="flex items-center gap-2">
           <span className="relative flex h-2.5 w-2.5">
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-secondary opacity-75"></span>
             <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-primary"></span>
           </span>
-          <span className="font-label-md text-label-md text-on-surface font-semibold">
-            Live Sync Aktif
+          <span className="font-label-md text-label-md text-on-surface font-semibold text-xs sm:text-sm">
+            Live Sync Cloud Aktif
           </span>
         </div>
-        <span className="font-body-sm text-body-sm text-on-surface-variant text-xs">
-          Menampilkan {filteredPhotos.length} Foto
-        </span>
+        <button
+          onClick={() => refreshGalleryNow()}
+          disabled={isSyncing}
+          className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-container hover:bg-surface-container-highest border border-outline-variant/40 text-xs text-primary font-semibold transition-all active:scale-95 shadow-2xs"
+          title="Sinkronkan foto dari semua tamu undangan"
+        >
+          <span className={`material-symbols-outlined text-[15px] ${isSyncing ? 'animate-spin' : ''}`}>
+            sync
+          </span>
+          <span>Segarkan ({filteredPhotos.length} Foto)</span>
+        </button>
       </div>
 
       {/* Dynamic Gallery Cards Feed */}

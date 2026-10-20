@@ -1,4 +1,4 @@
-import { ChatMessage } from '../types';
+import { ChatMessage, Photo } from '../types';
 
 // KVdb bucket ID for WedSnap Fajar & Aulia wedding
 const KVDB_BUCKET = 'Y7gJBLFvpHTuzkV1xqY5gr';
@@ -10,7 +10,7 @@ const NTFY_PUBLISH_URL = `https://ntfy.sh/${NTFY_TOPIC}`;
 const NTFY_SSE_URL = `https://ntfy.sh/${NTFY_TOPIC}/sse`;
 
 export interface RealtimePayload {
-  type: 'NEW_MESSAGE' | 'REACTION';
+  type: 'NEW_MESSAGE' | 'REACTION' | 'NEW_PHOTO' | 'PHOTO_LIKE';
   payload: any;
 }
 
@@ -88,11 +88,13 @@ export async function broadcastReaction(messageId: string, emoji: string): Promi
 }
 
 /**
- * Subscribe to real-time incoming messages and reactions via Server-Sent Events (SSE)
+ * Subscribe to real-time incoming messages, reactions, and photos via Server-Sent Events (SSE)
  */
 export function subscribeToRealtimeChat(
   onNewMessage: (msg: ChatMessage) => void,
-  onReaction: (messageId: string, emoji: string) => void
+  onReaction: (messageId: string, emoji: string) => void,
+  onNewPhoto?: (photo: Photo) => void,
+  onPhotoLike?: (photoId: string, likes: number) => void
 ): () => void {
   let es: EventSource | null = null;
 
@@ -110,6 +112,10 @@ export function subscribeToRealtimeChat(
               onNewMessage(parsed.payload);
             } else if (parsed.type === 'REACTION' && parsed.payload) {
               onReaction(parsed.payload.messageId, parsed.payload.emoji);
+            } else if (parsed.type === 'NEW_PHOTO' && parsed.payload && onNewPhoto) {
+              onNewPhoto(parsed.payload);
+            } else if (parsed.type === 'PHOTO_LIKE' && parsed.payload && onPhotoLike) {
+              onPhotoLike(parsed.payload.photoId, parsed.payload.likes);
             }
           }
         } catch {
