@@ -46,8 +46,22 @@
       display: none;
     }
   </style>
-  <script type="module" crossorigin src="./assets/index-16BOGWne.js"></script>
-  <link rel="stylesheet" crossorigin href="./assets/index-CcxblYsI.css">
+  <script>
+    // Safeguard for mobile browsers: show recovery actions if assets load slowly or cache is stale
+    window.addEventListener('error', function(e) {
+      console.warn('WedSnap mobile diagnostic error:', e);
+      var panel = document.getElementById('wedsnap-recovery-panel');
+      if (panel) panel.style.display = 'flex';
+    });
+    setTimeout(function() {
+      if (!window.__WEDSNAP_MOUNTED__) {
+        var panel = document.getElementById('wedsnap-recovery-panel');
+        if (panel) panel.style.display = 'flex';
+      }
+    }, 3500);
+  </script>
+  <script type="module" crossorigin src="./assets/index-Ssp_WNYe.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/index-Bcv9oiTR.css">
 </head>
 <body class="bg-surface font-sans text-on-surface antialiased selection:bg-primary-fixed selection:text-on-primary-fixed">
   <div id="root">
@@ -60,7 +74,18 @@
       </div>
       <h1 style="font-family:'Playfair Display',serif;font-size:24px;font-weight:700;color:#775a19;margin:0 0 8px 0;letter-spacing:1px;">WedSnap</h1>
       <p style="font-size:13px;color:#7c766f;margin:0 0 24px 0;max-width:260px;line-height:1.5;">Kamera Sekali Pakai & Galeri Pernikahan Fajar & Aulia</p>
-      <div style="width:36px;height:36px;border:3px solid #eedeb5;border-top-color:#775a19;border-radius:50%;animation:wedsnapSpin 0.9s linear infinite;"></div>
+      <div id="wedsnap-spinner" style="width:36px;height:36px;border:3px solid #eedeb5;border-top-color:#775a19;border-radius:50%;animation:wedsnapSpin 0.9s linear infinite;"></div>
+      
+      <!-- Recovery panel if loading is delayed or blocked by cache on mobile -->
+      <div id="wedsnap-recovery-panel" style="display:none;margin-top:20px;flex-direction:column;align-items:center;gap:10px;">
+        <p style="font-size:12px;color:#775a19;margin:0;font-weight:600;">Sedang menyiapkan kamera & galeri...</p>
+        <button onclick="window.location.reload(true)" style="background:#775a19;color:#ffffff;border:none;padding:10px 22px;border-radius:12px;font-size:13px;font-weight:600;box-shadow:0 4px 12px rgba(119,90,25,0.25);cursor:pointer;">
+          Buka Sekarang
+        </button>
+        <button onclick="try{localStorage.clear();sessionStorage.clear();}catch(e){}if(window.caches){caches.keys().then(function(keys){keys.forEach(function(k){caches.delete(k);});});}if(navigator.serviceWorker){navigator.serviceWorker.getRegistrations().then(function(regs){regs.forEach(function(r){r.unregister();});});}window.location.reload(true);" style="background:transparent;border:none;color:#8c827a;font-size:11px;text-decoration:underline;cursor:pointer;padding:4px 8px;">
+          Bersihkan Cache & Buka Baru
+        </button>
+      </div>
     </div>
     <style>
       @keyframes wedsnapSpin {
@@ -71,7 +96,9 @@
   <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', function() {
-        navigator.serviceWorker.register('./sw.js?v=4').catch(function(err) {
+        navigator.serviceWorker.register('./sw.js?v=6').then(function(registration) {
+          if (registration) registration.update();
+        }).catch(function(err) {
           console.warn('WedSnap Service Worker registration error:', err);
         });
       });

@@ -1,4 +1,4 @@
-// WedSnap Lightweight Safe PWA Service Worker
+// WedSnap Lightweight Safe PWA Service Worker v6
 // Designed for GitHub Pages & Mobile Webviews (eliminates stale cache and network crashes)
 
 self.addEventListener('install', (event) => {
